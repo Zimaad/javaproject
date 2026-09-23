@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.smartinterview.controller.McqRoundController"
+            styleClass="mcq-root">
+
+    <!-- ===== Round bar: context, timer, progress ===== -->
+    <top>
+        <HBox styleClass="round-bar">
+            <VBox styleClass="round-info" HBox.hgrow="ALWAYS">
+                <Label text="ROUND 1 OF 3 · MULTIPLE CHOICE" styleClass="round-label"/>
+                <Label fx:id="roleLabel" text="Java Developer" styleClass="round-value"/>
+            </VBox>
+
+            <VBox alignment="CENTER_RIGHT" spacing="6">
+                <Label fx:id="timerLabel" text="14:59" styleClass="timer-display" contentDisplay="LEFT">
+                    <graphic><FontIcon iconLiteral="mdi2t-timer-outline" styleClass="icon-sm, icon-muted"/></graphic>
+                </Label>
+                <HBox spacing="10" alignment="CENTER_RIGHT">
+                    <ProgressBar fx:id="progressBar" progress="0.1" prefWidth="150"/>
+                    <Label fx:id="progressLabel" text="1/10" styleClass="progress-text"/>
+                </HBox>
+            </VBox>
+        </HBox>
+    </top>
+
+    <!-- ===== Question navigator ===== -->
+    <left>
+        <VBox styleClass="q-navigator">
+            <Label text="QUESTIONS" styleClass="nav-title"/>
+            <FlowPane fx:id="qNavPane" styleClass="q-nav-grid"/>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <!-- Legend, because the navigator states answered / current
+                 through colour and needs a text key as well. -->
+            <VBox styleClass="q-nav-legend">
+                <Separator styleClass="divider"/>
+                <HBox styleClass="legend-row">
+                    <padding><Insets top="10"/></padding>
+                    <StackPane styleClass="legend-swatch, legend-swatch-current"/>
+                    <Label text="Current" styleClass="legend-label"/>
+                </HBox>
+                <HBox styleClass="legend-row">
+                    <StackPane styleClass="legend-swatch, legend-swatch-answered"/>
+                    <Label text="Answered" styleClass="legend-label"/>
+                </HBox>
+                <HBox styleClass="legend-row">
+                    <StackPane styleClass="legend-swatch, legend-swatch-todo"/>
+                    <Label text="Not answered" styleClass="legend-label"/>
+                </HBox>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- ===== Question ===== -->
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="page-content">
+            <VBox styleClass="mcq-content">
+
+                <VBox styleClass="question-card" spacing="18">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label fx:id="qNumberLabel" text="Question 1" styleClass="text-h4" HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="categoryBadge" text="Java" styleClass="badge, badge-category"/>
+                        <Label fx:id="difficultyBadge" text="Medium" styleClass="badge, badge-medium"/>
+                    </HBox>
+
+                    <Label fx:id="questionTextLabel" text="Loading question…" styleClass="mcq-question-text"/>
+
+                    <VBox fx:id="optionsContainer" styleClass="mcq-options"/>
+                </VBox>
+
+                <HBox styleClass="mcq-nav" alignment="CENTER">
+                    <Button fx:id="btnPrev" text="Previous" styleClass="btn-secondary" onAction="#onPrevQuestion">
+                        <graphic><FontIcon iconLiteral="mdi2a-arrow-left" styleClass="icon-sm"/></graphic>
+                    </Button>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="btnNext" text="Next question" styleClass="btn-primary" onAction="#onNextQuestion"
+                            contentDisplay="RIGHT">
+                        <graphic><FontIcon iconLiteral="mdi2a-arrow-right" styleClass="icon-sm"/></graphic>
+                    </Button>
+                </HBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

@@ -1,0 +1,88 @@
+/*
+ * SmartInterview — Admin screens
+ */
+
+.admin-root {
+    -fx-background-color: -fx-bg-base;
+}
+.admin-content {
+    -fx-padding: 28 32 40 32;
+    -fx-spacing: 24;
+    -fx-background-color: -fx-bg-base;
+}
+.admin-header { -fx-spacing: 6; }
+.admin-header .admin-title {
+    -fx-font-family: "Plus Jakarta Sans ExtraBold";
+    -fx-font-size: 26px;
+    -fx-text-fill: -fx-text-primary;
+}
+.admin-header .admin-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: -fx-text-muted;
+}
+/* Marks the console as a privileged area. */
+.admin-badge {
+    -fx-background-color: -fx-accent-wash-hi;
+    -fx-background-radius: 999;
+    -fx-padding: 5 12;
+    -fx-spacing: 6;
+    -fx-alignment: CENTER;
+}
+.admin-badge .admin-badge-text {
+    -fx-font-family: "Plus Jakarta Sans Bold", "Plus Jakarta Sans";
+    -fx-font-weight: bold;
+    -fx-font-size: 10.5px;
+    -fx-text-fill: -fx-text-accent;
+}
+
+/* Activity feed */
+.activity-feed {
+    -fx-background-color: -fx-bg-surface;
+    -fx-background-radius: 16;
+    -fx-border-color: -fx-border-subtle;
+    -fx-border-width: 1;
+    -fx-border-radius: 16;
+    -fx-padding: 22;
+    -fx-spacing: 4;
+    -fx-effect: dropshadow(gaussian, rgba(28, 25, 23, 0.05), 8, 0, 0, 2);
+}
+.activity-item {
+    -fx-padding: 12 0;
+    -fx-border-color: transparent transparent -fx-border-subtle transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-spacing: 12;
+    -fx-alignment: CENTER_LEFT;
+}
+.activity-item-last { -fx-border-width: 0; }
+.activity-item .activity-text {
+    -fx-font-size: 13px;
+    -fx-text-fill: -fx-text-primary;
+    -fx-wrap-text: true;
+}
+.activity-item .activity-time {
+    -fx-font-family: "JetBrains Mono", monospace;
+    -fx-font-size: 10.5px;
+    -fx-text-fill: -fx-text-muted;
+}
+
+/* Question management */
+.question-mgmt { -fx-spacing: 20; }
+.question-toolbar {
+    -fx-spacing: 12;
+    -fx-alignment: CENTER_LEFT;
+}
+.question-form {
+    -fx-background-color: -fx-bg-surface;
+    -fx-background-radius: 16;
+    -fx-border-color: -fx-border-subtle;
+    -fx-border-width: 1;
+    -fx-border-radius: 16;
+    -fx-padding: 24;
+    -fx-spacing: 16;
+    -fx-effect: dropshadow(gaussian, rgba(28, 25, 23, 0.05), 8, 0, 0, 2);
+}
+.form-label {
+    -fx-font-family: "Plus Jakarta Sans SemiBold";
+    -fx-font-size: 12.5px;
+    -fx-text-fill: -fx-text-secondary;
+}

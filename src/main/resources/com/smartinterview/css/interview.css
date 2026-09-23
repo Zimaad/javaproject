@@ -1,0 +1,358 @@
+/*
+ * SmartInterview — Interview flow
+ * Role picker, configuration, MCQ / coding / HR rounds, evaluation.
+ * Tokens only.
+ */
+
+/* ========================================================
+   ROLE PICKER
+   ======================================================== */
+.interview-select-root {
+    -fx-background-color: -fx-bg-base;
+    -fx-padding: 0;
+}
+.roles-grid {
+    -fx-alignment: TOP_LEFT;
+    -fx-padding: 24 32 40 32;
+}
+.topics-flow {
+    -fx-hgap: 6;
+    -fx-vgap: 6;
+}
+
+/* ========================================================
+   INTERVIEW CONFIG
+   ======================================================== */
+.config-root {
+    -fx-background-color: -fx-bg-base;
+    -fx-padding: 0;
+}
+.config-body {
+    -fx-padding: 28 32 40 32;
+    -fx-spacing: 24;
+}
+.config-container {
+    -fx-spacing: 28;
+}
+.config-section { -fx-spacing: 12; }
+.config-section .config-label {
+    -fx-font-family: "Plus Jakarta Sans SemiBold";
+    -fx-font-size: 14.5px;
+    -fx-text-fill: -fx-text-primary;
+}
+.config-section .config-hint {
+    -fx-font-size: 12px;
+    -fx-text-fill: -fx-text-muted;
+}
+.config-options { -fx-spacing: 10; }
+
+/* Summary rail. Sticky-feeling panel that totals up the choices. */
+.config-summary {
+    -fx-background-color: -fx-bg-surface;
+    -fx-background-radius: 16;
+    -fx-border-color: -fx-border-subtle;
+    -fx-border-width: 1;
+    -fx-border-radius: 16;
+    -fx-padding: 24;
+    -fx-spacing: 18;
+    -fx-pref-width: 300;
+    -fx-min-width: 300;
+    -fx-effect: dropshadow(gaussian, rgba(28, 25, 23, 0.06), 10, 0, 0, 2);
+}
+.config-summary .summary-title {
+    -fx-font-family: "Plus Jakarta Sans SemiBold";
+    -fx-font-size: 15px;
+    -fx-text-fill: -fx-text-primary;
+}
+.summary-row { -fx-spacing: 3; }
+.summary-row .summary-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: -fx-text-muted;
+}
+.summary-row .summary-value {
+    -fx-font-family: "Plus Jakarta Sans SemiBold";
+    -fx-font-size: 13.5px;
+    -fx-text-fill: -fx-text-primary;
+}
+
+/* ========================================================
+   ROUND TOP BAR  (shared by MCQ / coding / HR)
+   ======================================================== */
+.round-bar {
+    -fx-background-color: -fx-bg-raised;
+    -fx-padding: 14 24;
+    -fx-border-color: transparent transparent -fx-border-subtle transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-spacing: 16;
+    -fx-alignment: CENTER_LEFT;
+}
+.round-info { -fx-spacing: 2; }
+.round-info .round-label {
+    -fx-font-family: "Plus Jakarta Sans Bold", "Plus Jakarta Sans";
+    -fx-font-weight: bold;
+    -fx-font-size: 10.5px;
+    -fx-text-fill: -fx-text-muted;
+}
+.round-info .round-value {
+    -fx-font-family: "Plus Jakarta Sans SemiBold";
+    -fx-font-size: 15px;
+    -fx-text-fill: -fx-text-primary;
+}
+
+/* Timer. Monospaced so the digits do not jitter as they count down. */
+.timer-display {
+    -fx-font-family: "JetBrains Mono Medium", "JetBrains Mono", monospace;
+    -fx-font-size: 17px;
+    -fx-text-fill: -fx-text-primary;
+    -fx-background-color: -fx-bg-sunken;
+    -fx-background-radius: 8;
+    -fx-padding: 7 14;
+    -fx-graphic-text-gap: 8;
+}
+/* Under a minute: colour AND an icon change, never colour alone. */
+.timer-display-warning {
+    -fx-text-fill: -fx-warning;
+    -fx-background-color: -fx-warning-wash;
+}
+.timer-display-critical {
+    -fx-text-fill: -fx-danger;
+    -fx-background-color: -fx-danger-wash;
+}
+.progress-text {
+    -fx-font-family: "JetBrains Mono", monospace;
+    -fx-font-size: 12px;
+    -fx-text-fill: -fx-text-muted;
+}
+
+/* ========================================================
+   MCQ ROUND
+   ======================================================== */
+.mcq-root { -fx-background-color: -fx-bg-base; }
+.mcq-content {
+    -fx-padding: 28 32 40 32;
+    -fx-spacing: 20;
+}
+.mcq-question-text {
+    -fx-font-family: "Plus Jakarta Sans Medium";
+    -fx-font-size: 16.5px;
+    -fx-text-fill: -fx-text-primary;
+    -fx-wrap-text: true;
+    -fx-line-spacing: 6;
+}
+.mcq-options {
+    -fx-spacing: 10;
+    -fx-padding: 4 0 0 0;
+}
+.mcq-nav {
+    -fx-spacing: 12;
+    -fx-padding: 8 0 0 0;
+}
+
+/* Question navigator rail */
+.q-navigator {
+    -fx-background-color: -fx-bg-raised;
+    -fx-padding: 20 18;
+    -fx-pref-width: 208;
+    -fx-min-width: 208;
+    -fx-border-color: transparent -fx-border-subtle transparent transparent;
+    -fx-border-width: 0 1 0 0;
+    -fx-spacing: 14;
+}
+.q-navigator .nav-title {
+    -fx-font-family: "Plus Jakarta Sans Bold", "Plus Jakarta Sans";
+    -fx-font-weight: bold;
+    -fx-font-size: 10.5px;
+    -fx-text-fill: -fx-text-muted;
+}
+.q-nav-grid {
+    -fx-hgap: 8;
+    -fx-vgap: 8;
+}
+
+/* ========================================================
+   CODING ROUND
+   ======================================================== */
+.coding-root { -fx-background-color: -fx-bg-base; }
+
+.problem-panel {
+    -fx-background-color: -fx-bg-surface;
+    -fx-padding: 24;
+    -fx-spacing: 16;
+}
+.problem-title {
+    -fx-font-family: "Plus Jakarta Sans ExtraBold";
+    -fx-font-size: 21px;
+    -fx-text-fill: -fx-text-primary;
+}
+.problem-text {
+    -fx-font-size: 13.5px;
+    -fx-text-fill: -fx-text-secondary;
+    -fx-wrap-text: true;
+    -fx-line-spacing: 6;
+}
+
+.editor-panel {
+    -fx-background-color: -fx-bg-sunken;
+    -fx-spacing: 0;
+}
+.editor-toolbar {
+    -fx-background-color: -fx-bg-raised;
+    -fx-padding: 10 14;
+    -fx-border-color: transparent transparent -fx-border-subtle transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-spacing: 10;
+}
+.editor-filename {
+    -fx-font-family: "JetBrains Mono", monospace;
+    -fx-font-size: 12px;
+    -fx-text-fill: -fx-text-muted;
+}
+
+/* Console. A dark well is the one place dark reads as "terminal"
+   rather than as an inconsistency. */
+.console-panel {
+    -fx-background-color: #1c1917;
+    -fx-padding: 12 14;
+    -fx-pref-height: 168;
+    -fx-min-height: 168;
+    -fx-spacing: 8;
+}
+.console-title {
+    -fx-font-family: "JetBrains Mono Medium", "JetBrains Mono", monospace;
+    -fx-font-size: 10.5px;
+    -fx-text-fill: #a8a29e;
+}
+.console-output {
+    -fx-font-family: "JetBrains Mono", monospace;
+    -fx-font-size: 12.5px;
+    -fx-text-fill: #6ee7a8;
+    -fx-line-spacing: 3;
+}
+.console-close .ikonli-font-icon {
+    -fx-icon-color: #a8a29e;
+    -fx-fill: #a8a29e;
+}
+.console-close:hover { -fx-background-color: rgba(255, 255, 255, 0.10); }
+.console-close:hover .ikonli-font-icon {
+    -fx-icon-color: #ffffff;
+    -fx-fill: #ffffff;
+}
+
+/* ========================================================
+   HR ROUND
+   ======================================================== */
+.hr-root { -fx-background-color: -fx-bg-base; }
+.hr-content {
+    -fx-padding: 32;
+    -fx-spacing: 22;
+    -fx-max-width: 820;
+}
+.hr-question {
+    -fx-font-family: "Plus Jakarta Sans SemiBold";
+    -fx-font-size: 19px;
+    -fx-text-fill: -fx-text-primary;
+    -fx-wrap-text: true;
+    -fx-line-spacing: 7;
+}
+.hr-tip {
+    -fx-background-color: -fx-accent-wash;
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(234, 88, 12, 0.22);
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-padding: 16;
+    -fx-spacing: 6;
+}
+.hr-tip .tip-title {
+    -fx-font-family: "Plus Jakarta Sans Bold", "Plus Jakarta Sans";
+    -fx-font-weight: bold;
+    -fx-font-size: 12.5px;
+    -fx-text-fill: -fx-text-accent;
+}
+.hr-tip .tip-text {
+    -fx-font-size: 12.5px;
+    -fx-text-fill: -fx-text-secondary;
+    -fx-wrap-text: true;
+    -fx-line-spacing: 4;
+}
+.char-count {
+    -fx-font-family: "JetBrains Mono", monospace;
+    -fx-font-size: 11.5px;
+    -fx-text-fill: -fx-text-muted;
+}
+/* Approaching the limit. */
+.char-count-warning { -fx-text-fill: -fx-warning; }
+
+/* ========================================================
+   EVALUATION (progress screen)
+   ======================================================== */
+.eval-root {
+    -fx-background-color: -fx-bg-base;
+    -fx-alignment: CENTER;
+}
+.eval-container {
+    -fx-spacing: 10;
+    -fx-alignment: CENTER;
+    -fx-padding: 48;
+    -fx-max-width: 560;
+}
+.eval-title {
+    -fx-font-family: "Plus Jakarta Sans ExtraBold";
+    -fx-font-size: 28px;
+    -fx-text-fill: -fx-text-primary;
+}
+.eval-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: -fx-text-muted;
+}
+.eval-steps {
+    -fx-spacing: 6;
+    -fx-padding: 24 0;
+    -fx-max-width: 420;
+}
+.eval-step {
+    -fx-spacing: 14;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 8 12;
+    -fx-background-radius: 10;
+}
+/* The step currently running gets a wash so progress is obvious
+   at a glance. */
+.eval-step-active { -fx-background-color: -fx-accent-wash; }
+
+.eval-step .step-icon {
+    -fx-min-width: 30;
+    -fx-min-height: 30;
+    -fx-max-width: 30;
+    -fx-max-height: 30;
+    -fx-alignment: CENTER;
+    -fx-background-radius: 999;
+}
+.eval-step .step-icon-pending {
+    -fx-background-color: -fx-bg-sunken;
+}
+.eval-step .step-icon-pending .label {
+    -fx-text-fill: -fx-text-muted;
+    -fx-font-size: 12px;
+}
+.eval-step .step-icon-active {
+    -fx-background-color: -fx-accent-wash-hi;
+}
+.eval-step .step-icon-done {
+    -fx-background-color: -fx-success-wash;
+}
+.eval-step .step-text {
+    -fx-font-size: 14px;
+    -fx-text-fill: -fx-text-primary;
+}
+.eval-step .step-text-pending { -fx-text-fill: -fx-text-muted; }
+.eval-step .step-text-active {
+    -fx-font-family: "Plus Jakarta Sans SemiBold";
+    -fx-text-fill: -fx-text-primary;
+}
+.eval-step .step-text-done { -fx-text-fill: -fx-text-secondary; }
+
+/* Navigator legend swatches */
+.legend-swatch-current  { -fx-background-color: -fx-accent; }
+.legend-swatch-answered { -fx-background-color: -fx-success; }
+.legend-swatch-todo     { -fx-background-color: -fx-border-strong; }

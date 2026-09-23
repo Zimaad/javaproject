@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import com.smartinterview.ui.Sidebar?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.smartinterview.controller.SettingsController"
+            styleClass="dashboard-root">
+
+    <left>
+        <Sidebar active="settings"/>
+    </left>
+
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="page-content">
+            <VBox>
+
+                <HBox styleClass="page-header" alignment="CENTER_LEFT" spacing="14">
+                    <StackPane styleClass="icon-tile, tile-accent">
+                        <FontIcon iconLiteral="mdi2c-cog-outline" styleClass="icon-lg, icon-accent"/>
+                    </StackPane>
+                    <VBox spacing="3" HBox.hgrow="ALWAYS">
+                        <Label text="Settings" styleClass="page-title"/>
+                        <Label text="Manage your preferences and account." styleClass="page-subtitle"/>
+                    </VBox>
+                </HBox>
+
+                <VBox styleClass="settings-section" spacing="20">
+
+                    <!-- ===== Interview defaults ===== -->
+                    <VBox styleClass="settings-group">
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <FontIcon iconLiteral="mdi2t-target" styleClass="icon-md, icon-accent"/>
+                            <Label text="Interview defaults" styleClass="settings-group-title"/>
+                        </HBox>
+                        <Separator styleClass="divider"/>
+
+                        <HBox styleClass="settings-item" alignment="CENTER_LEFT" spacing="16">
+                            <VBox HBox.hgrow="ALWAYS" spacing="3">
+                                <Label text="Default difficulty" styleClass="setting-label"/>
+                                <Label text="Pre-selected when you start a new interview." styleClass="setting-desc"/>
+                            </VBox>
+                            <ComboBox fx:id="difficultyCombo" prefWidth="164"/>
+                        </HBox>
+
+                        <HBox styleClass="settings-item" alignment="CENTER_LEFT" spacing="16">
+                            <VBox HBox.hgrow="ALWAYS" spacing="3">
+                                <Label text="Default duration" styleClass="setting-label"/>
+                                <Label text="Standard length for a mock interview." styleClass="setting-desc"/>
+                            </VBox>
+                            <ComboBox fx:id="durationCombo" prefWidth="164"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- ===== Notifications ===== -->
+                    <VBox styleClass="settings-group">
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <FontIcon iconLiteral="mdi2b-bell-outline" styleClass="icon-md, icon-accent"/>
+                            <Label text="Notifications" styleClass="settings-group-title"/>
+                        </HBox>
+                        <Separator styleClass="divider"/>
+
+                        <HBox styleClass="settings-item" alignment="CENTER_LEFT" spacing="16">
+                            <VBox HBox.hgrow="ALWAYS" spacing="3">
+                                <Label text="Email reports" styleClass="setting-label"/>
+                                <Label text="Send performance reports to your email after each interview." styleClass="setting-desc"/>
+                            </VBox>
+                            <ToggleButton fx:id="emailToggle" text="Enabled" selected="true" prefWidth="110"/>
+                        </HBox>
+
+                        <HBox styleClass="settings-item" alignment="CENTER_LEFT" spacing="16">
+                            <VBox HBox.hgrow="ALWAYS" spacing="3">
+                                <Label text="Practice reminders" styleClass="setting-label"/>
+                                <Label text="A weekly nudge to keep your preparation on track." styleClass="setting-desc"/>
+                            </VBox>
+                            <ToggleButton fx:id="reminderToggle" text="Disabled" prefWidth="110"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- ===== Security ===== -->
+                    <VBox styleClass="settings-group">
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <FontIcon iconLiteral="mdi2s-shield-lock-outline" styleClass="icon-md, icon-accent"/>
+                            <Label text="Security" styleClass="settings-group-title"/>
+                        </HBox>
+                        <Separator styleClass="divider"/>
+
+                        <HBox styleClass="settings-item" alignment="CENTER_LEFT" spacing="16">
+                            <VBox HBox.hgrow="ALWAYS" spacing="3">
+                                <Label text="Password" styleClass="setting-label"/>
+                                <Label text="Update the password you use to sign in." styleClass="setting-desc"/>
+                            </VBox>
+                            <Button text="Change password" styleClass="btn-secondary" onAction="#onChangePassword"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- ===== Danger zone =====
+                         Destructive actions live in their own group, away
+                         from everything routine. -->
+                    <VBox styleClass="settings-group">
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <FontIcon iconLiteral="mdi2a-alert-circle-outline" styleClass="icon-md, icon-danger"/>
+                            <Label text="Danger zone" styleClass="settings-group-title"/>
+                        </HBox>
+                        <Separator styleClass="divider"/>
+
+                        <HBox styleClass="settings-item" alignment="CENTER_LEFT" spacing="16">
+                            <VBox HBox.hgrow="ALWAYS" spacing="3">
+                                <Label text="Delete account" styleClass="setting-label"/>
+                                <Label text="Permanently removes your account and all interview history. This cannot be undone."
+                                       styleClass="setting-desc"/>
+                            </VBox>
+                            <Button text="Delete account" styleClass="btn-danger" onAction="#onDeleteAccount"/>
+                        </HBox>
+                    </VBox>
+
+                    <HBox fx:id="statusBox" styleClass="alert, alert-success" visible="false" managed="false" maxWidth="720">
+                        <FontIcon iconLiteral="mdi2c-check-circle-outline" styleClass="icon-sm, icon-success"/>
+                        <Label fx:id="statusLabel" text="" styleClass="alert-text"/>
+                    </HBox>
+
+                    <HBox alignment="CENTER_LEFT" spacing="12" maxWidth="720">
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button styleClass="btn-primary" onAction="#onSave" text="Save settings">
+                            <graphic><FontIcon iconLiteral="mdi2c-content-save-outline" styleClass="icon-sm"/></graphic>
+                        </Button>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<!--
+  Landing page.
+
+  All styling lives in landing.css / theme.css — no inline style
+  attributes, no emoji standing in for icons.
+-->
+<ScrollPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.smartinterview.controller.LandingController"
+            fitToWidth="true" styleClass="landing-root" hbarPolicy="NEVER">
+    <VBox alignment="CENTER" spacing="0">
+
+        <!-- ============ TOP BAR ============ -->
+        <HBox styleClass="landing-nav" alignment="CENTER_LEFT" spacing="12">
+            <StackPane styleClass="logo-mark">
+                <FontIcon iconLiteral="mdi2b-brain" styleClass="icon-md, icon-on-accent"/>
+            </StackPane>
+            <Label text="SmartInterview" styleClass="landing-nav-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Log in" styleClass="btn-ghost" onAction="#onLogin"/>
+            <Button text="Get started" styleClass="btn-primary" onAction="#onStartInterview"/>
+        </HBox>
+
+        <!-- ============ HERO ============ -->
+        <VBox styleClass="hero-section" alignment="CENTER" spacing="20">
+
+            <!-- Eyebrow pill -->
+            <HBox styleClass="hero-eyebrow" alignment="CENTER" spacing="8" maxWidth="-Infinity">
+                <FontIcon iconLiteral="mdi2r-robot-outline" styleClass="icon-sm, icon-accent"/>
+                <Label text="AI-POWERED INTERVIEW PREPARATION" styleClass="hero-eyebrow-text"/>
+            </HBox>
+
+            <VBox alignment="CENTER" spacing="4">
+                <Label text="Walk into every interview" styleClass="hero-title"/>
+                <Label text="already prepared." styleClass="hero-title-accent"/>
+            </VBox>
+
+            <Label styleClass="hero-subtitle" wrapText="true"
+                   text="Practise realistic technical, coding and behavioural rounds, then get instant AI evaluation with the specific feedback you need to improve."/>
+
+            <HBox styleClass="hero-buttons" alignment="CENTER" spacing="14">
+                <Button styleClass="btn-primary, btn-large" onAction="#onStartInterview" text="Start a mock interview">
+                    <graphic><FontIcon iconLiteral="mdi2r-rocket-launch-outline" styleClass="icon-sm"/></graphic>
+                </Button>
+                <Button styleClass="btn-secondary, btn-large" onAction="#onExplore" text="Explore the platform">
+                    <graphic><FontIcon iconLiteral="mdi2c-cursor-default-click-outline" styleClass="icon-sm"/></graphic>
+                </Button>
+            </HBox>
+
+            <!-- Proof strip -->
+            <HBox styleClass="hero-stats" alignment="CENTER" spacing="0">
+                <VBox styleClass="hero-stat" alignment="CENTER" spacing="2">
+                    <Label text="500+" styleClass="hero-stat-value"/>
+                    <Label text="Practice questions" styleClass="hero-stat-label"/>
+                </VBox>
+                <Separator orientation="VERTICAL" styleClass="hero-stat-rule"/>
+                <VBox styleClass="hero-stat" alignment="CENTER" spacing="2">
+                    <Label text="3" styleClass="hero-stat-value"/>
+                    <Label text="Interview rounds" styleClass="hero-stat-label"/>
+                </VBox>
+                <Separator orientation="VERTICAL" styleClass="hero-stat-rule"/>
+                <VBox styleClass="hero-stat" alignment="CENTER" spacing="2">
+                    <Label text="Instant" styleClass="hero-stat-value"/>
+                    <Label text="AI feedback" styleClass="hero-stat-label"/>
+                </VBox>
+            </HBox>
+        </VBox>
+
+        <!-- ============ JOURNEY ============ -->
+        <VBox styleClass="workflow-section" alignment="CENTER" spacing="8">
+            <Label text="YOUR INTERVIEW JOURNEY" styleClass="text-overline"/>
+            <Label text="A structured path to interview success" styleClass="section-title"/>
+            <Label text="Five steps, from picking a role to measurable improvement." styleClass="section-subtitle"/>
+
+            <HBox alignment="TOP_CENTER" spacing="4">
+                <padding><Insets top="28"/></padding>
+
+                <VBox styleClass="workflow-step" alignment="TOP_CENTER" spacing="10">
+                    <StackPane styleClass="step-number">
+                        <Label text="1"/>
+                    </StackPane>
+                    <Label text="Choose a role" styleClass="step-title"/>
+                    <Label text="Pick the job you are targeting" styleClass="step-desc" wrapText="true"/>
+                </VBox>
+
+                <FontIcon iconLiteral="mdi2a-arrow-right" styleClass="workflow-arrow"/>
+
+                <VBox styleClass="workflow-step" alignment="TOP_CENTER" spacing="10">
+                    <StackPane styleClass="step-number">
+                        <Label text="2"/>
+                    </StackPane>
+                    <Label text="Take the interview" styleClass="step-title"/>
+                    <Label text="MCQ, coding and HR rounds" styleClass="step-desc" wrapText="true"/>
+                </VBox>
+
+                <FontIcon iconLiteral="mdi2a-arrow-right" styleClass="workflow-arrow"/>
+
+                <VBox styleClass="workflow-step" alignment="TOP_CENTER" spacing="10">
+                    <StackPane styleClass="step-number">
+                        <Label text="3"/>
+                    </StackPane>
+                    <Label text="Get evaluated" styleClass="step-title"/>
+                    <Label text="AI analyses every answer" styleClass="step-desc" wrapText="true"/>
+                </VBox>
+
+                <FontIcon iconLiteral="mdi2a-arrow-right" styleClass="workflow-arrow"/>
+
+                <VBox styleClass="workflow-step" alignment="TOP_CENTER" spacing="10">
+                    <StackPane styleClass="step-number">
+                        <Label text="4"/>
+                    </StackPane>
+                    <Label text="Review the report" styleClass="step-title"/>
+                    <Label text="Scores, strengths and gaps" styleClass="step-desc" wrapText="true"/>
+                </VBox>
+
+                <FontIcon iconLiteral="mdi2a-arrow-right" styleClass="workflow-arrow"/>
+
+                <VBox styleClass="workflow-step" alignment="TOP_CENTER" spacing="10">
+                    <StackPane styleClass="step-number, step-number-done">
+                        <FontIcon iconLiteral="mdi2c-check-circle-outline" styleClass="icon-sm, icon-success"/>
+                    </StackPane>
+                    <Label text="Improve" styleClass="step-title, text-success"/>
+                    <Label text="Practise again and track gains" styleClass="step-desc" wrapText="true"/>
+                </VBox>
+            </HBox>
+        </VBox>
+
+        <!-- ============ FEATURES ============ -->
+        <VBox styleClass="features-section" alignment="CENTER" spacing="8">
+            <Label text="PLATFORM FEATURES" styleClass="text-overline"/>
+            <Label text="Everything you need to prepare" styleClass="section-title"/>
+            <Label text="Purpose-built for the three rounds most interviews actually use." styleClass="section-subtitle"/>
+
+            <FlowPane alignment="CENTER" hgap="18" vgap="18" prefWrapLength="1080">
+                <padding><Insets top="28"/></padding>
+
+                <VBox styleClass="feature-card" spacing="14">
+                    <StackPane styleClass="icon-tile, tile-accent">
+                        <FontIcon iconLiteral="mdi2c-code-braces" styleClass="icon-lg, icon-accent"/>
+                    </StackPane>
+                    <Label text="Technical rounds" styleClass="feature-title"/>
+                    <Label text="Multiple-choice questions across Java, DSA, DBMS and operating systems."
+                           styleClass="feature-desc" wrapText="true"/>
+                </VBox>
+
+                <VBox styleClass="feature-card" spacing="14">
+                    <StackPane styleClass="icon-tile, tile-info">
+                        <FontIcon iconLiteral="mdi2c-console" styleClass="icon-lg, icon-info"/>
+                    </StackPane>
+                    <Label text="Coding challenges" styleClass="feature-title"/>
+                    <Label text="Solve real problems in a built-in editor with a live console."
+                           styleClass="feature-desc" wrapText="true"/>
+                </VBox>
+
+                <VBox styleClass="feature-card" spacing="14">
+                    <StackPane styleClass="icon-tile, tile-warning">
+                        <FontIcon iconLiteral="mdi2a-account-voice" styleClass="icon-lg, icon-warning"/>
+                    </StackPane>
+                    <Label text="HR &amp; behavioural" styleClass="feature-title"/>
+                    <Label text="Practise behavioural questions with STAR-method guidance."
+                           styleClass="feature-desc" wrapText="true"/>
+                </VBox>
+
+                <VBox styleClass="feature-card" spacing="14">
+                    <StackPane styleClass="icon-tile, tile-success">
+                        <FontIcon iconLiteral="mdi2r-robot-outline" styleClass="icon-lg, icon-success"/>
+                    </StackPane>
+                    <Label text="AI evaluation" styleClass="feature-title"/>
+                    <Label text="Every round scored the moment you finish, with reasoning."
+                           styleClass="feature-desc" wrapText="true"/>
+                </VBox>
+
+                <VBox styleClass="feature-card" spacing="14">
+                    <StackPane styleClass="icon-tile, tile-accent">
+                        <FontIcon iconLiteral="mdi2c-chart-box-outline" styleClass="icon-lg, icon-accent"/>
+                    </StackPane>
+                    <Label text="Progress analytics" styleClass="feature-title"/>
+                    <Label text="Track scores over time and see which topics still need work."
+                           styleClass="feature-desc" wrapText="true"/>
+                </VBox>
+            </FlowPane>
+        </VBox>
+
+        <!-- ============ HOW IT WORKS ============ -->
+        <VBox styleClass="how-it-works" alignment="CENTER" spacing="8">
+            <Label text="HOW IT WORKS" styleClass="text-overline"/>
+            <Label text="Three steps to your first report" styleClass="section-title"/>
+
+            <HBox spacing="20" alignment="TOP_CENTER">
+                <padding><Insets top="28"/></padding>
+
+                <VBox styleClass="how-step" spacing="12">
+                    <Label text="01" styleClass="how-number"/>
+                    <Label text="Sign up and choose a role" styleClass="how-title"/>
+                    <Label styleClass="how-desc" wrapText="true"
+                           text="Create a free account and select what you are preparing for — Java Developer, Software Engineer, Data Analyst and more."/>
+                </VBox>
+
+                <VBox styleClass="how-step" spacing="12">
+                    <Label text="02" styleClass="how-number"/>
+                    <Label text="Take the interview" styleClass="how-title"/>
+                    <Label styleClass="how-desc" wrapText="true"
+                           text="Work through timed MCQ, coding and HR rounds tailored to the role and difficulty you picked."/>
+                </VBox>
+
+                <VBox styleClass="how-step" spacing="12">
+                    <Label text="03" styleClass="how-number"/>
+                    <Label text="Review and improve" styleClass="how-title"/>
+                    <Label styleClass="how-desc" wrapText="true"
+                           text="Read your AI evaluation — scores per round, strengths, weaknesses and concrete recommendations."/>
+                </VBox>
+            </HBox>
+        </VBox>
+
+        <!-- ============ CLOSING CTA ============ -->
+        <VBox styleClass="landing-cta" alignment="CENTER" spacing="16">
+            <Label text="Ready to practise?" styleClass="cta-title"/>
+            <Label text="Your first mock interview takes about 30 minutes." styleClass="cta-subtitle"/>
+            <HBox alignment="CENTER" spacing="12">
+                <padding><Insets top="6"/></padding>
+                <Button text="Start a mock interview" styleClass="btn-primary, btn-large" onAction="#onStartInterview"/>
+                <Button text="I already have an account" styleClass="btn-ghost, btn-large" onAction="#onLogin"/>
+            </HBox>
+        </VBox>
+
+        <!-- ============ FOOTER ============ -->
+        <HBox styleClass="landing-footer" alignment="CENTER_LEFT" spacing="16">
+            <FontIcon iconLiteral="mdi2b-brain" styleClass="icon-sm, icon-subtle"/>
+            <Label text="SmartInterview" styleClass="footer-brand"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="© 2026 SmartInterview. Built for students." styleClass="footer-text"/>
+        </HBox>
+    </VBox>
+</ScrollPane>

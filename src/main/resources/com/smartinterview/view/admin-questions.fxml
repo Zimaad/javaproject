@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import com.smartinterview.ui.AdminSidebar?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.smartinterview.controller.AdminQuestionController"
+            styleClass="admin-root">
+
+    <left>
+        <AdminSidebar active="admin-questions"/>
+    </left>
+
+    <center>
+        <VBox styleClass="admin-content" spacing="20">
+
+            <HBox alignment="CENTER_LEFT" spacing="14">
+                <VBox styleClass="admin-header" HBox.hgrow="ALWAYS">
+                    <Label text="Question management" styleClass="admin-title"/>
+                    <Label text="Add, edit or remove questions from the global bank." styleClass="admin-subtitle"/>
+                </VBox>
+                <HBox styleClass="admin-badge">
+                    <FontIcon iconLiteral="mdi2s-shield-account-outline" styleClass="icon-xs, icon-accent"/>
+                    <Label text="ADMIN ACCESS" styleClass="admin-badge-text"/>
+                </HBox>
+            </HBox>
+
+            <HBox styleClass="question-toolbar" alignment="CENTER_LEFT" spacing="12">
+                <StackPane alignment="CENTER_LEFT">
+                    <TextField fx:id="searchField" promptText="Search questions" styleClass="search-bar" prefWidth="300"/>
+                    <FontIcon iconLiteral="mdi2m-magnify" styleClass="icon-sm, icon-muted, search-icon"/>
+                </StackPane>
+                <Region HBox.hgrow="ALWAYS"/>
+                <ComboBox fx:id="categoryCombo" promptText="All categories" prefWidth="154"/>
+                <ComboBox fx:id="typeCombo" promptText="All types" prefWidth="134"/>
+                <Button styleClass="btn-primary" onAction="#onAddQuestion" text="Add question">
+                    <graphic><FontIcon iconLiteral="mdi2p-plus" styleClass="icon-sm"/></graphic>
+                </Button>
+            </HBox>
+
+            <TableView fx:id="questionTable" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="80"/>
+                    <TableColumn fx:id="colType" text="TYPE" prefWidth="90"/>
+                    <TableColumn fx:id="colCategory" text="CATEGORY" prefWidth="120"/>
+                    <TableColumn fx:id="colDiff" text="DIFFICULTY" prefWidth="110"/>
+                    <TableColumn fx:id="colText" text="QUESTION" prefWidth="380"/>
+                    <TableColumn fx:id="colAction" text="" prefWidth="150"/>
+                </columns>
+                <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
+                <placeholder>
+                    <VBox styleClass="empty-state" spacing="12">
+                        <FontIcon iconLiteral="mdi2b-book-open-outline" styleClass="icon-2xl, icon-subtle"/>
+                        <Label text="No questions found" styleClass="empty-title"/>
+                        <Label text="Add a question to get started." styleClass="empty-text"/>
+                    </VBox>
+                </placeholder>
+            </TableView>
+        </VBox>
+    </center>
+</BorderPane>

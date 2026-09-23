@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        
+        {
+            "type": "java",
+            "name": "SmartInterview App",
+            "request": "launch",
+            "mainClass": "com.smartinterview.Launcher",
+            "projectName": "smartinterview"
+        }
+    ]
+}

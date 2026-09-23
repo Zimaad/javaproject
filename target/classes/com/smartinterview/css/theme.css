@@ -1,0 +1,826 @@
+/*
+ * SmartInterview — Design System (global)
+ * ---------------------------------------------------------------
+ * Light, warm token layer + base control styling.
+ *
+ * Palette: warm off-white canvas, pure white cards, burnt-orange
+ * brand. All colour, radius and type decisions live here as looked-up
+ * variables on `.root`. Views must reference the tokens or the
+ * semantic style classes below — never raw hex in FXML.
+ *
+ * Contrast: every text token is verified >= 4.5:1 against the canvas,
+ * the card and its own wash. Solid fills use whichever of white /
+ * near-black ink clears AA — plain orange (#ea580c) is only 3.6:1
+ * against white, so it is reserved for icons, rails and focus rings,
+ * while solid buttons use the deeper #c2410c.
+ * ---------------------------------------------------------------
+ */
+
+/* ========================================================
+   TOKENS
+   ======================================================== */
+.root {
+    /* --- Surfaces. In a light theme white is the *raised* end of the
+           ladder, so cards are white and the canvas is tinted warm. --- */
+    -fx-bg-sunken:         #f1ebe5;   /* wells, code, console          */
+    -fx-bg-base:           #f7f4f1;   /* app canvas                    */
+    -fx-bg-raised:         #ffffff;   /* sidebar, header bars          */
+    -fx-bg-surface:        #ffffff;   /* cards                         */
+    -fx-bg-surface-hover:  #fdfaf7;   /* card hover                    */
+    -fx-bg-surface-active: #f7f1ea;   /* pressed / selected            */
+    -fx-bg-input:          #ffffff;   /* fields                        */
+
+    /* Translucent overlays — tint whatever sits beneath them. */
+    -fx-overlay-subtle:    rgba(28, 25, 23, 0.03);
+    -fx-overlay:           rgba(28, 25, 23, 0.06);
+    -fx-shine:             rgba(255, 255, 255, 0.70);
+
+    /* --- Text: 5 roles. Warm-grey ramp, all AA except `subtle`,
+           which is decorative only (dividers, disabled hints). --- */
+    -fx-text-primary:      #1c1917;   /* 17.5:1 on white */
+    -fx-text-secondary:    #57534e;   /*  7.6:1 on white */
+    -fx-text-muted:        #6b645e;   /*  5.8:1 on white */
+    -fx-text-subtle:       #8a827b;   /* decorative only — never body text */
+    -fx-text-accent:       #c2410c;   /*  5.2:1 on white */
+
+    /* --- Brand. `-fx-accent` is the bright graphic orange (icons,
+           rails, focus). `-fx-accent-solid` is the button fill that
+           clears AA with white text. --- */
+    -fx-accent:            #ea580c;
+    -fx-accent-solid:      #c2410c;   /* white on it: 5.2:1 */
+    -fx-accent-hover:      #9a3412;   /* white on it: 7.3:1 */
+    -fx-accent-press:      #7c2d12;   /* white on it: 9.4:1 */
+    -fx-accent-wash:       #fff4ec;
+    -fx-accent-wash-hi:    #ffe6d5;
+    -fx-accent-glow:       rgba(234, 88, 12, 0.28);
+    -fx-on-accent:         #ffffff;
+
+    /* --- Semantics. `-solid` is the fill that carries white text;
+           `-ink` is the text colour for a bright fill. --- */
+    -fx-success:           #15803d;   /*  5.0:1 on white */
+    -fx-success-solid:     #15803d;
+    -fx-success-ink:       #ffffff;
+    -fx-success-wash:      #ecfdf3;
+
+    -fx-warning:           #b45309;   /*  5.0:1 on white */
+    -fx-warning-solid:     #f59e0b;
+    -fx-warning-ink:       #1c1917;   /*  8.1:1 on the fill */
+    -fx-warning-wash:      #fffbeb;
+
+    -fx-danger:            #b91c1c;   /*  6.5:1 on white */
+    -fx-danger-solid:      #b91c1c;
+    -fx-danger-ink:        #ffffff;
+    -fx-danger-wash:       #fef2f2;
+
+    -fx-info:              #0369a1;   /*  5.9:1 on white */
+    -fx-info-wash:         #eff6ff;
+
+    /* --- Borders. With no lightness step above white, borders do the
+           separating work in a light theme — so they are real, not hints. --- */
+    -fx-border-subtle:     #ece5de;
+    -fx-border-base:       #ddd4cb;
+    -fx-border-strong:     #c4b8ac;
+    -fx-focus-ring:        #ea580c;
+
+    /* --- Radii (px) --- */
+    -fx-r-sm:  8;
+    -fx-r-md:  12;
+    -fx-r-lg:  16;
+    -fx-r-xl:  20;
+    -fx-r-pill: 999;
+
+    /* --- JavaFX base overrides --- */
+    -fx-base: #f7f4f1;
+    -fx-background: -fx-bg-base;
+    -fx-control-inner-background: -fx-bg-input;
+    -fx-focus-color: -fx-focus-ring;
+    -fx-faint-focus-color: transparent;
+    -fx-font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-text-fill: -fx-text-primary;
+}
+
+.root-container,
+.page-root {
+    -fx-background-color: -fx-bg-base;
+}
+
+/*
+ * TYPOGRAPHY
+ * ----------
+ * Plus Jakarta Sans for the interface, JetBrains Mono for code and
+ * figures. Because TrueType caps a family at regular/bold, the heavier
+ * weights are separate families and MUST be addressed by name:
+ *
+ *   400  "Plus Jakarta Sans"                (default)
+ *   500  "Plus Jakarta Sans Medium"
+ *   600  "Plus Jakarta Sans SemiBold"
+ *   700  "Plus Jakarta Sans" + -fx-font-weight: bold
+ *   800  "Plus Jakarta Sans ExtraBold"
+ *
+ * Writing `-fx-font-weight: 500` instead would silently render Regular.
+ */
+
+/* Figures that must not reflow as they change: timers, scores, counts. */
+.tabular {
+    -fx-font-family: "JetBrains Mono Medium", "JetBrains Mono", monospace;
+}
+.mono {
+    -fx-font-family: "JetBrains Mono", "Cascadia Code", "Consolas", monospace;
+}
+
+/* ========================================================
+   TYPE SCALE
+   11 · 12 · 13 · 14 · 16 · 18 · 22 · 28 · 34 · 44
+   ======================================================== */
+.label { -fx-text-fill: -fx-text-primary; }
+
+.text-display {
+    -fx-font-family: "Plus Jakarta Sans ExtraBold";
+    -fx-font-size: 44px;
+    -fx-text-fill: -fx-text-primary;
+}
+.text-h1 {
+    -fx-font-family: "Plus Jakarta Sans ExtraBold";
+    -fx-font-size: 34px;
+    -fx-text-fill: -fx-text-primary;
+}
+.text-h2 {
+    -fx-font-family: "Plus Jakarta Sans Bold", "Plus Jakarta Sans";
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-text-primary;
+}
+.text-h3 {
+    -fx-font-family: "Plus Jakarta Sans";
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-text-primary;
+}
+.text-h4 {
+    -fx-font-family: "Plus Jakarta Sans SemiBold";
+    -fx-font-size: 18px;
+    -fx-text-fill: -fx-text-primary;
+}
+.text-title {
+    -fx-font-family: "Plus Jakarta Sans SemiBold";
+    -fx-font-size: 16px;
+    -fx-text-fill: -fx-text-primary;
+}
+.text-body {
+    -fx-font-size: 14px;
+    -fx-text-fill: -fx-text-primary;
+    -fx-line-spacing: 5;
+}
+.text-body-lg {
+    -fx-font-size: 16px;
+    -fx-text-fill: -fx-text-primary;
+    -fx-line-spacing: 6;
+}
+.text-secondary {
+    -fx-font-size: 14px;
+    -fx-text-fill: -fx-text-secondary;
+    -fx-line-spacing: 5;
+}
+.text-muted {
+    -fx-font-size: 13px;
+    -fx-text-fill: -fx-text-muted;
+}
+.text-small {
+    -fx-font-size: 12px;
+    -fx-text-fill: -fx-text-muted;
+}
+/* Uppercase micro-label for section eyebrows. Muted, not subtle —
+   it is real text and has to clear AA. */
+.text-overline {
+    -fx-font-family: "Plus Jakarta Sans Bold", "Plus Jakarta Sans";
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-text-muted;
+}
+.text-accent   { -fx-text-fill: -fx-text-accent; }
+.text-success  { -fx-text-fill: -fx-success; }
+.text-warning  { -fx-text-fill: -fx-warning; }
+.text-danger   { -fx-text-fill: -fx-danger; }
+.text-info     { -fx-text-fill: -fx-info; }
+.text-bold     { -fx-font-weight: bold; }
+.text-medium   { -fx-font-family: "Plus Jakarta Sans Medium"; }
+.text-semibold { -fx-font-family: "Plus Jakarta Sans SemiBold"; }
+
+/* ========================================================
+   ICONS  (Ikonli FontIcon — MaterialDesign2 family only)
+   One family, one stroke language, sized from a token scale.
+   ======================================================== */
+.ikonli-font-icon {
+    -fx-icon-color: -fx-text-secondary;
+    -fx-icon-size: 18;
+    -fx-fill: -fx-text-secondary;   /* older Ikonli honours -fx-fill */
+}
+.icon-xs { -fx-icon-size: 14; }
+.icon-sm { -fx-icon-size: 16; }
+.icon-md { -fx-icon-size: 18; }
+.icon-lg { -fx-icon-size: 22; }
+.icon-xl { -fx-icon-size: 28; }
+.icon-2xl { -fx-icon-size: 36; }
+.icon-3xl { -fx-icon-size: 48; }
+
+.icon-primary   { -fx-icon-color: -fx-text-primary;   -fx-fill: -fx-text-primary; }
+.icon-muted     { -fx-icon-color: -fx-text-muted;     -fx-fill: -fx-text-muted; }
+.icon-subtle    { -fx-icon-color: -fx-text-subtle;    -fx-fill: -fx-text-subtle; }
+.icon-accent    { -fx-icon-color: -fx-text-accent;    -fx-fill: -fx-text-accent; }
+.icon-success   { -fx-icon-color: -fx-success;        -fx-fill: -fx-success; }
+.icon-warning   { -fx-icon-color: -fx-warning;        -fx-fill: -fx-warning; }
+.icon-danger    { -fx-icon-color: -fx-danger;         -fx-fill: -fx-danger; }
+.icon-info      { -fx-icon-color: -fx-info;           -fx-fill: -fx-info; }
+.icon-on-accent { -fx-icon-color: -fx-on-accent;      -fx-fill: -fx-on-accent; }
+
+/* ========================================================
+   BUTTONS
+   Every variant defines hover / pressed / focused / disabled.
+   Focus is always visible — keyboard users need it.
+   ======================================================== */
+.button {
+    -fx-background-color: -fx-bg-surface;
+    -fx-text-fill: -fx-text-primary;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: -fx-border-base;
+    -fx-border-width: 1;
+    -fx-padding: 10 18;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-graphic-text-gap: 8;
+}
+.button:hover {
+    -fx-background-color: -fx-bg-surface-hover;
+    -fx-border-color: -fx-border-strong;
+}
+.button:pressed {
+    -fx-background-color: -fx-bg-surface-active;
+}
+.button:focused {
+    -fx-border-color: -fx-focus-ring;
+    -fx-effect: dropshadow(gaussian, rgba(139, 123, 255, 0.45), 0, 1.0, 0, 0);
+}
+.button:disabled {
+    -fx-opacity: 0.42;
+    -fx-cursor: default;
+}
+
+.btn-primary {
+    -fx-background-color: -fx-accent-solid;
+    -fx-text-fill: -fx-on-accent;
+    -fx-border-color: transparent;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(108, 92, 231, 0.28), 14, 0, 0, 4);
+}
+.btn-primary .ikonli-font-icon { -fx-icon-color: -fx-on-accent; -fx-fill: -fx-on-accent; }
+.btn-primary:hover {
+    -fx-background-color: -fx-accent-hover;
+    -fx-border-color: transparent;
+    -fx-effect: dropshadow(gaussian, -fx-accent-glow, 20, 0, 0, 6);
+}
+.btn-primary:pressed {
+    -fx-background-color: -fx-accent-press;
+    -fx-effect: dropshadow(gaussian, rgba(108, 92, 231, 0.20), 8, 0, 0, 2);
+}
+.btn-primary:focused {
+    -fx-border-color: -fx-focus-ring;
+    -fx-border-width: 2;
+}
+
+.btn-secondary {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-text-primary;
+    -fx-border-color: -fx-border-base;
+}
+.btn-secondary:hover {
+    -fx-background-color: -fx-accent-wash;
+    -fx-border-color: -fx-accent;
+    -fx-text-fill: -fx-text-accent;
+}
+.btn-secondary:hover .ikonli-font-icon {
+    -fx-icon-color: -fx-text-accent;
+    -fx-fill: -fx-text-accent;
+}
+.btn-secondary:pressed { -fx-background-color: -fx-accent-wash-hi; }
+
+/* Solid semantic fills use dark ink — white on a bright fill fails AA. */
+.btn-success {
+    -fx-background-color: -fx-success-solid;
+    -fx-text-fill: -fx-success-ink;
+    -fx-border-color: transparent;
+    -fx-font-weight: bold;
+}
+.btn-success .ikonli-font-icon { -fx-icon-color: -fx-success-ink; -fx-fill: -fx-success-ink; }
+.btn-success:hover  { -fx-background-color: #166534; }
+.btn-success:pressed { -fx-background-color: #14532d; }
+
+.btn-danger {
+    -fx-background-color: -fx-danger-solid;
+    -fx-text-fill: -fx-danger-ink;
+    -fx-border-color: transparent;
+    -fx-font-weight: bold;
+}
+.btn-danger .ikonli-font-icon { -fx-icon-color: -fx-danger-ink; -fx-fill: -fx-danger-ink; }
+.btn-danger:hover  { -fx-background-color: #991b1b; }
+.btn-danger:pressed { -fx-background-color: #7f1d1d; }
+
+/* Low-emphasis destructive: red text, no fill. Keeps logout etc.
+   visually separated from ordinary actions. */
+.btn-danger-quiet {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-danger;
+    -fx-border-color: transparent;
+}
+.btn-danger-quiet .ikonli-font-icon { -fx-icon-color: -fx-danger; -fx-fill: -fx-danger; }
+.btn-danger-quiet:hover {
+    -fx-background-color: -fx-danger-wash;
+    -fx-text-fill: -fx-danger;
+}
+
+.btn-ghost {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-text-secondary;
+    -fx-border-color: transparent;
+}
+.btn-ghost .ikonli-font-icon { -fx-icon-color: -fx-text-secondary; -fx-fill: -fx-text-secondary; }
+.btn-ghost:hover {
+    -fx-text-fill: -fx-text-primary;
+    -fx-background-color: -fx-overlay;
+}
+.btn-ghost:hover .ikonli-font-icon { -fx-icon-color: -fx-text-primary; -fx-fill: -fx-text-primary; }
+
+.btn-large  { -fx-padding: 13 26; -fx-font-size: 15px; }
+.btn-small  { -fx-padding: 7 14;  -fx-font-size: 12px; }
+
+/* Square icon-only button. Sized to stay a comfortable click target. */
+.btn-icon {
+    -fx-padding: 8;
+    -fx-min-width: 36;
+    -fx-min-height: 36;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-content-display: graphic-only;
+}
+
+/* Inline text link. */
+.link {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: -fx-text-accent;
+    -fx-padding: 2 0;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-font-weight: 500;
+}
+.link:hover {
+    -fx-text-fill: #cfc9ff;
+    -fx-underline: true;
+    -fx-background-color: transparent;
+}
+.link:focused {
+    -fx-border-color: transparent;
+    -fx-underline: true;
+    -fx-effect: none;
+}
+
+/* ========================================================
+   TEXT INPUTS
+   ======================================================== */
+.text-field, .password-field {
+    -fx-background-color: -fx-bg-input;
+    -fx-text-fill: -fx-text-primary;
+    -fx-prompt-text-fill: -fx-text-muted;
+    -fx-border-color: -fx-border-base;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 11 14;
+    -fx-font-size: 14px;
+}
+.text-field:hover, .password-field:hover {
+    -fx-border-color: -fx-border-strong;
+}
+.text-field:focused, .password-field:focused {
+    -fx-border-color: -fx-focus-ring;
+    -fx-border-width: 2;
+    -fx-padding: 10 13;   /* compensate so the field does not resize */
+}
+.text-field:disabled, .password-field:disabled { -fx-opacity: 0.42; }
+
+/* Invalid field — paired with an error message, never colour alone. */
+.field-error {
+    -fx-border-color: -fx-danger;
+    -fx-border-width: 1;
+}
+.field-error:focused {
+    -fx-border-color: -fx-danger;
+    -fx-border-width: 2;
+}
+
+.text-area {
+    -fx-background-color: -fx-bg-input;
+    -fx-text-fill: -fx-text-primary;
+    -fx-prompt-text-fill: -fx-text-muted;
+    -fx-border-color: -fx-border-base;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-font-size: 14px;
+}
+.text-area .content {
+    -fx-background-color: -fx-bg-input;
+    -fx-background-radius: 7;
+    -fx-padding: 12;
+}
+.text-area:hover  { -fx-border-color: -fx-border-strong; }
+.text-area:focused {
+    -fx-border-color: -fx-focus-ring;
+    -fx-border-width: 2;
+}
+
+/* ========================================================
+   COMBO BOX
+   ======================================================== */
+.combo-box, .choice-box {
+    -fx-background-color: -fx-bg-input;
+    -fx-border-color: -fx-border-base;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 5 8;
+    -fx-cursor: hand;
+}
+.combo-box:hover, .choice-box:hover { -fx-border-color: -fx-border-strong; }
+.combo-box:focused, .choice-box:focused {
+    -fx-border-color: -fx-focus-ring;
+    -fx-border-width: 2;
+    -fx-padding: 4 7;
+}
+.combo-box .list-cell, .choice-box .label {
+    -fx-text-fill: -fx-text-primary;
+    -fx-background-color: transparent;
+    -fx-padding: 4 4;
+}
+.combo-box .arrow, .choice-box .arrow { -fx-background-color: -fx-text-muted; }
+.combo-box:hover .arrow { -fx-background-color: -fx-text-secondary; }
+
+.combo-box-popup .list-view {
+    -fx-background-color: -fx-bg-surface-hover;
+    -fx-border-color: -fx-border-base;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 4;
+    -fx-effect: dropshadow(gaussian, rgba(28, 25, 23, 0.16), 24, 0, 0, 8);
+}
+.combo-box-popup .list-view .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-text-primary;
+    -fx-padding: 9 12;
+    -fx-background-radius: 6;
+}
+.combo-box-popup .list-view .list-cell:hover {
+    -fx-background-color: -fx-accent-wash;
+}
+.combo-box-popup .list-view .list-cell:filled:selected {
+    -fx-background-color: -fx-accent-wash-hi;
+    -fx-text-fill: -fx-text-accent;
+}
+
+/* ========================================================
+   CHECK BOX / RADIO
+   ======================================================== */
+.check-box {
+    -fx-text-fill: -fx-text-primary;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+}
+.check-box .box {
+    -fx-background-color: -fx-bg-input;
+    -fx-border-color: -fx-border-strong;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 3.5;
+}
+.check-box:hover .box { -fx-border-color: -fx-accent; }
+.check-box:focused .box {
+    -fx-border-color: -fx-focus-ring;
+    -fx-border-width: 2;
+}
+.check-box:selected .box {
+    -fx-background-color: -fx-accent-solid;
+    -fx-border-color: -fx-accent-solid;
+}
+.check-box .mark { -fx-background-color: transparent; }
+.check-box:selected .mark { -fx-background-color: -fx-on-accent; }
+.check-box:disabled { -fx-opacity: 0.42; }
+
+.radio-button {
+    -fx-text-fill: -fx-text-primary;
+    -fx-cursor: hand;
+}
+.radio-button .radio {
+    -fx-background-color: -fx-bg-input;
+    -fx-border-color: -fx-border-strong;
+    -fx-border-width: 1;
+    -fx-border-radius: 999;
+    -fx-background-radius: 999;
+    -fx-padding: 3.5;
+}
+.radio-button:hover .radio { -fx-border-color: -fx-accent; }
+.radio-button:focused .radio {
+    -fx-border-color: -fx-focus-ring;
+    -fx-border-width: 2;
+}
+.radio-button:selected .radio { -fx-border-color: -fx-accent; }
+.radio-button:selected .dot {
+    -fx-background-color: -fx-accent;
+    -fx-background-radius: 999;
+    -fx-padding: 4;
+}
+
+/* ========================================================
+   TOGGLE BUTTON  (segmented option groups)
+   ======================================================== */
+.toggle-button {
+    -fx-background-color: -fx-bg-surface;
+    -fx-text-fill: -fx-text-secondary;
+    -fx-border-color: -fx-border-base;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+}
+.toggle-button:hover {
+    -fx-background-color: -fx-bg-surface-hover;
+    -fx-text-fill: -fx-text-primary;
+    -fx-border-color: -fx-border-strong;
+}
+.toggle-button:focused {
+    -fx-border-color: -fx-focus-ring;
+    -fx-border-width: 2;
+    -fx-padding: 9 19;
+}
+/* Selected state carries both a fill and a weight change, so it never
+   relies on colour alone. */
+.toggle-button:selected {
+    -fx-background-color: -fx-accent-wash-hi;
+    -fx-text-fill: -fx-text-accent;
+    -fx-border-color: -fx-accent;
+    -fx-font-weight: bold;
+}
+.toggle-button:selected:hover { -fx-background-color: rgba(108, 92, 231, 0.26); }
+
+/* ========================================================
+   PROGRESS
+   ======================================================== */
+.progress-bar {
+    -fx-background-color: transparent;
+    -fx-background-radius: 999;
+    -fx-padding: 0;
+    -fx-min-height: 8;
+    -fx-pref-height: 8;
+}
+.progress-bar > .track {
+    -fx-background-color: -fx-bg-surface-active;
+    -fx-background-radius: 999;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+.progress-bar > .bar {
+    -fx-background-color: linear-gradient(to right, #ea580c, #f59e0b);
+    -fx-background-radius: 999;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+.progress-bar.progress-success > .bar {
+    -fx-background-color: linear-gradient(to right, #17b98d, -fx-success);
+}
+.progress-bar.progress-warning > .bar {
+    -fx-background-color: linear-gradient(to right, #e8a93f, -fx-warning);
+}
+.progress-bar.progress-danger > .bar {
+    -fx-background-color: linear-gradient(to right, #e2543d, -fx-danger);
+}
+.progress-bar.progress-thin { -fx-min-height: 5; -fx-pref-height: 5; }
+
+.progress-indicator {
+    -fx-progress-color: -fx-accent;
+}
+.progress-indicator .percentage { -fx-fill: -fx-text-secondary; }
+
+/* ========================================================
+   SCROLL PANE / SCROLL BAR
+   Thin, unobtrusive, appears on hover.
+   ======================================================== */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-padding: 0;
+}
+.scroll-pane > .viewport { -fx-background-color: transparent; }
+.scroll-pane:focused { -fx-background-insets: 0; }
+.scroll-pane .corner { -fx-background-color: transparent; }
+
+.scroll-bar {
+    -fx-background-color: transparent;
+    -fx-padding: 2;
+}
+.scroll-bar:vertical   { -fx-pref-width: 10; }
+.scroll-bar:horizontal { -fx-pref-height: 10; }
+.scroll-bar .track {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 999;
+}
+.scroll-bar .thumb {
+    -fx-background-color: #33334a;
+    -fx-background-radius: 999;
+    -fx-background-insets: 2;
+}
+.scroll-bar .thumb:hover   { -fx-background-color: #4a4a66; }
+.scroll-bar .thumb:pressed { -fx-background-color: #5a5a7a; }
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+    -fx-shape: "";
+    -fx-padding: 0;
+}
+
+/* ========================================================
+   TABLE VIEW
+   ======================================================== */
+.table-view {
+    -fx-background-color: -fx-bg-surface;
+    -fx-border-color: -fx-border-subtle;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 0;
+    -fx-table-cell-border-color: transparent;
+}
+.table-view:focused { -fx-border-color: -fx-border-subtle; }
+
+.table-view .column-header-background {
+    -fx-background-color: -fx-bg-raised;
+    -fx-background-radius: 12 12 0 0;
+    -fx-border-color: transparent transparent -fx-border-subtle transparent;
+    -fx-border-width: 0 0 1 0;
+}
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-size: 42;
+}
+.table-view .column-header .label {
+    -fx-text-fill: -fx-text-muted;
+    -fx-font-weight: bold;
+    -fx-font-size: 11px;
+    -fx-padding: 0 16;
+    -fx-alignment: CENTER_LEFT;
+}
+.table-view .table-row-cell {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent -fx-border-subtle transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-cell-size: 46;
+}
+.table-view .table-row-cell:hover   { -fx-background-color: -fx-overlay-subtle; }
+.table-view .table-row-cell:selected { -fx-background-color: -fx-accent-wash; }
+.table-view .table-row-cell:selected .table-cell { -fx-text-fill: -fx-text-primary; }
+.table-view .table-cell {
+    -fx-text-fill: -fx-text-primary;
+    -fx-padding: 0 16;
+    -fx-font-size: 13px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-border-color: transparent;
+}
+.table-view .table-row-cell:empty { -fx-background-color: transparent; -fx-border-color: transparent; }
+.table-view .table-row-cell:empty .table-cell { -fx-border-color: transparent; }
+.table-view .filler { -fx-background-color: -fx-bg-raised; }
+.table-view .placeholder .label {
+    -fx-text-fill: -fx-text-muted;
+    -fx-font-size: 13px;
+}
+
+/* ========================================================
+   TAB PANE
+   ======================================================== */
+.tab-pane { -fx-tab-min-height: 38; }
+.tab-pane > .tab-header-area { -fx-padding: 0; }
+.tab-pane > .tab-header-area > .tab-header-background {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent -fx-border-subtle transparent;
+    -fx-border-width: 0 0 1 0;
+}
+.tab-pane > .tab-header-area > .headers-region > .tab {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 8 18;
+    -fx-cursor: hand;
+}
+.tab-pane .tab .tab-label {
+    -fx-text-fill: -fx-text-muted;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+}
+.tab-pane .tab:hover { -fx-background-color: -fx-overlay-subtle; }
+.tab-pane .tab:hover .tab-label { -fx-text-fill: -fx-text-secondary; }
+.tab-pane .tab:selected {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent -fx-accent transparent;
+    -fx-border-width: 0 0 2 0;
+}
+.tab-pane .tab:selected .tab-label {
+    -fx-text-fill: -fx-text-accent;
+    -fx-font-weight: bold;
+}
+.tab-pane > .tab-content-area { -fx-background-color: transparent; }
+.tab-pane .tab-header-area .tab:focused { -fx-border-color: transparent transparent -fx-focus-ring transparent; }
+
+/* ========================================================
+   SPLIT PANE / SEPARATOR
+   ======================================================== */
+.split-pane { -fx-background-color: transparent; -fx-padding: 0; }
+.split-pane > .split-pane-divider {
+    -fx-background-color: -fx-border-subtle;
+    -fx-padding: 0 1;
+}
+.split-pane > .split-pane-divider:hover { -fx-background-color: -fx-accent; }
+
+.separator > .line {
+    -fx-border-color: -fx-border-subtle;
+    -fx-border-width: 1 0 0 0;
+}
+
+/* ========================================================
+   TOOLTIP
+   ======================================================== */
+.tooltip {
+    -fx-background-color: -fx-bg-surface-active;
+    -fx-text-fill: -fx-text-primary;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: -fx-border-base;
+    -fx-border-width: 1;
+    -fx-padding: 8 12;
+    -fx-font-size: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(28, 25, 23, 0.16), 16, 0, 0, 4);
+}
+
+/* ========================================================
+   CHARTS
+   Low-contrast gridlines so they never compete with the data.
+   ======================================================== */
+.chart { -fx-background-color: transparent; -fx-padding: 4 0 0 0; }
+.chart-plot-background { -fx-background-color: transparent; }
+.chart-vertical-grid-lines   { -fx-stroke: #ece5de; -fx-stroke-dash-array: 3 4; }
+.chart-horizontal-grid-lines { -fx-stroke: #ece5de; -fx-stroke-dash-array: 3 4; }
+.chart-vertical-zero-line,
+.chart-horizontal-zero-line  { -fx-stroke: -fx-border-base; }
+.chart-alternative-row-fill,
+.chart-alternative-column-fill { -fx-fill: transparent; -fx-stroke: transparent; }
+.chart-legend {
+    -fx-background-color: transparent;
+    -fx-padding: 8 0 0 0;
+}
+.chart-legend-item { -fx-text-fill: -fx-text-secondary; -fx-font-size: 12px; }
+.axis {
+    -fx-tick-label-fill: -fx-text-muted;
+    -fx-tick-label-font-size: 11px;
+    -fx-tick-mark-visible: false;
+    -fx-minor-tick-visible: false;
+}
+.axis:bottom { -fx-border-color: -fx-border-subtle transparent transparent transparent; }
+.axis:left   { -fx-border-color: transparent -fx-border-subtle transparent transparent; }
+.axis-label  { -fx-text-fill: -fx-text-muted; -fx-font-size: 11px; }
+
+.chart-series-line { -fx-stroke-width: 2.5px; }
+.default-color0.chart-series-line { -fx-stroke: #ea580c; }
+.default-color1.chart-series-line { -fx-stroke: #0369a1; }
+.default-color2.chart-series-line { -fx-stroke: #15803d; }
+.default-color3.chart-series-line { -fx-stroke: #b45309; }
+
+.chart-line-symbol {
+    -fx-background-insets: 0, 2.5;
+    -fx-background-radius: 999;
+    -fx-padding: 5;
+}
+.default-color0.chart-line-symbol { -fx-background-color: #ea580c, #ffffff; }
+.default-color1.chart-line-symbol { -fx-background-color: #0369a1, #ffffff; }
+.default-color2.chart-line-symbol { -fx-background-color: #15803d, #ffffff; }
+.default-color3.chart-line-symbol { -fx-background-color: #b45309, #ffffff; }
+
+.default-color0.chart-bar { -fx-bar-fill: #ea580c; }
+.default-color1.chart-bar { -fx-bar-fill: #0369a1; }
+.default-color2.chart-bar { -fx-bar-fill: #15803d; }
+.default-color3.chart-bar { -fx-bar-fill: #b45309; }

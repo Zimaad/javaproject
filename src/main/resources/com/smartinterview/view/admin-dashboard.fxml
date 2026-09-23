@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.geometry.Insets?>
+<?import com.smartinterview.ui.AdminSidebar?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.smartinterview.controller.AdminDashboardController"
+            styleClass="admin-root">
+
+    <left>
+        <AdminSidebar active="admin-dashboard"/>
+    </left>
+
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="page-content">
+            <VBox styleClass="admin-content" spacing="26">
+
+                <!-- ===== Header ===== -->
+                <HBox alignment="CENTER_LEFT" spacing="14">
+                    <VBox styleClass="admin-header" HBox.hgrow="ALWAYS">
+                        <Label text="Admin dashboard" styleClass="admin-title"/>
+                        <Label text="Platform overview and key metrics." styleClass="admin-subtitle"/>
+                    </VBox>
+                    <HBox styleClass="admin-badge">
+                        <FontIcon iconLiteral="mdi2s-shield-account-outline" styleClass="icon-xs, icon-accent"/>
+                        <Label text="ADMIN ACCESS" styleClass="admin-badge-text"/>
+                    </HBox>
+                </HBox>
+
+                <!-- ===== Stats ===== -->
+                <HBox styleClass="stats-grid" spacing="16">
+                    <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                        <HBox spacing="14" alignment="CENTER_LEFT">
+                            <StackPane styleClass="icon-tile, tile-info">
+                                <FontIcon iconLiteral="mdi2a-account-group-outline" styleClass="icon-lg, icon-info"/>
+                            </StackPane>
+                            <VBox spacing="1">
+                                <Label fx:id="totalUsers" text="248" styleClass="stat-value"/>
+                                <Label text="Total students" styleClass="stat-label"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                        <HBox spacing="14" alignment="CENTER_LEFT">
+                            <StackPane styleClass="icon-tile, tile-accent">
+                                <FontIcon iconLiteral="mdi2c-clipboard-text-outline" styleClass="icon-lg, icon-accent"/>
+                            </StackPane>
+                            <VBox spacing="1">
+                                <Label fx:id="totalInterviews" text="1547" styleClass="stat-value"/>
+                                <Label text="Interviews taken" styleClass="stat-label"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                        <HBox spacing="14" alignment="CENTER_LEFT">
+                            <StackPane styleClass="icon-tile, tile-warning">
+                                <FontIcon iconLiteral="mdi2b-book-open-outline" styleClass="icon-lg, icon-warning"/>
+                            </StackPane>
+                            <VBox spacing="1">
+                                <Label fx:id="totalQuestions" text="350" styleClass="stat-value"/>
+                                <Label text="Questions in bank" styleClass="stat-label"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                        <HBox spacing="14" alignment="CENTER_LEFT">
+                            <StackPane styleClass="icon-tile, tile-success">
+                                <FontIcon iconLiteral="mdi2c-chart-box-outline" styleClass="icon-lg, icon-success"/>
+                            </StackPane>
+                            <VBox spacing="1">
+                                <Label fx:id="avgScore" text="72.5%" styleClass="stat-value"/>
+                                <Label text="Platform average" styleClass="stat-label"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+                </HBox>
+
+                <!-- ===== Chart + activity ===== -->
+                <HBox spacing="20">
+                    <VBox styleClass="chart-container" HBox.hgrow="ALWAYS" spacing="4">
+                        <Label text="Interviews over time" styleClass="chart-title"/>
+                        <Label text="Last 7 days" styleClass="chart-caption"/>
+                        <BarChart fx:id="activityChart" prefHeight="262" animated="false" legendVisible="false">
+                            <xAxis><CategoryAxis label="Day"/></xAxis>
+                            <yAxis><NumberAxis label="Interviews"/></yAxis>
+                        </BarChart>
+                    </VBox>
+
+                    <VBox styleClass="activity-feed" prefWidth="356" minWidth="356">
+                        <Label text="Recent activity" styleClass="chart-title"/>
+                        <VBox fx:id="activityList" spacing="0"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>
