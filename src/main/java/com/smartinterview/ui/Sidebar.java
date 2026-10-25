@@ -2,7 +2,7 @@ package com.smartinterview.ui;
 
 import com.smartinterview.model.User;
 import com.smartinterview.navigation.NavigationManager;
-import com.smartinterview.service.MockAuthService;
+import com.smartinterview.service.AuthService;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -131,7 +131,7 @@ public class Sidebar extends VBox {
     }
 
     private VBox buildFooter() {
-        User user = MockAuthService.getInstance().getCurrentUser();
+        User user = AuthService.getInstance().getCurrentUser();
         String fullName = user != null ? user.getFullName() : "Guest";
         String role = user != null && "admin".equalsIgnoreCase(user.getRole()) ? "Administrator" : "Student";
 
@@ -159,7 +159,7 @@ public class Sidebar extends VBox {
         logout.setMaxWidth(Double.MAX_VALUE);
         logout.setTooltip(new Tooltip("Sign out of SmartInterview"));
         logout.setOnAction(e -> {
-            MockAuthService.getInstance().logout();
+            AuthService.getInstance().logout();
             NavigationManager.getInstance().navigateTo("landing");
         });
 

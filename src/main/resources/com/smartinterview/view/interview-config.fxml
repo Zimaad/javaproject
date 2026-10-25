@@ -117,7 +117,7 @@
                             <Label fx:id="errorLabel" text="" styleClass="alert-text"/>
                         </HBox>
 
-                        <Button text="Start interview" styleClass="btn-primary, btn-large"
+                        <Button fx:id="btnStart" text="Start interview" styleClass="btn-primary, btn-large"
                                 maxWidth="1.7976931348623157E308" onAction="#onStartInterview">
                             <graphic><FontIcon iconLiteral="mdi2p-play" styleClass="icon-sm"/></graphic>
                         </Button>

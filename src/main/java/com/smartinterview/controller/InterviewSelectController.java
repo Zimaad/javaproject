@@ -2,7 +2,7 @@ package com.smartinterview.controller;
 
 import com.smartinterview.model.Interview;
 import com.smartinterview.navigation.NavigationManager;
-import com.smartinterview.service.MockInterviewService;
+import com.smartinterview.service.InterviewService;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -28,7 +28,7 @@ public class InterviewSelectController {
     }
 
     private void loadRoles() {
-        List<Interview> roles = MockInterviewService.getInstance().getAvailableRoles();
+        List<Interview> roles = InterviewService.getInstance().getAvailableRoles();
         for (Interview role : roles) {
             rolesFlowPane.getChildren().add(createRoleCard(role));
         }

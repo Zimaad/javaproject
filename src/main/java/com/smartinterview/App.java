@@ -23,6 +23,13 @@ public class App extends Application {
     public void start(Stage stage) {
         primaryStage = stage;
 
+        // Open (and on first run create + seed) the local database up front.
+        try (java.sql.Connection ignored = com.smartinterview.db.Database.connect()) {
+            System.out.println("Database ready.");
+        } catch (java.sql.SQLException e) {
+            throw new IllegalStateException("Could not open the local database", e);
+        }
+
         // Load bundled fonts
         loadFonts();
 

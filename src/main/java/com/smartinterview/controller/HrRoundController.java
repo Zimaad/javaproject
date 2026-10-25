@@ -3,7 +3,7 @@ package com.smartinterview.controller;
 import com.smartinterview.model.Interview;
 import com.smartinterview.model.Question;
 import com.smartinterview.navigation.NavigationManager;
-import com.smartinterview.service.MockInterviewService;
+import com.smartinterview.service.InterviewSession;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -98,14 +98,8 @@ public class HrRoundController implements NavigationManager.DataReceiver {
     }
 
     private void loadQuestions() {
-        questions = MockInterviewService.getInstance().getHrQuestions("INT001");
-        
-        // Truncate to match user config (assuming HR gets fewer questions naturally)
-        int targetCount = Math.min(questions.size(), Math.max(3, currentInterview.getQuestionCount() / 3));
-        if (questions.size() > targetCount) {
-            questions = questions.subList(0, targetCount);
-        }
-        
+        questions = InterviewSession.current().getHrQuestions();
+
         displayQuestion(0);
     }
     
@@ -157,6 +151,7 @@ public class HrRoundController implements NavigationManager.DataReceiver {
     
     private void submitRound() {
         if (timer != null) timer.stop();
+        InterviewSession.current().setHrAnswers(answers);
         // Since HR is typically last, we go to evaluation
         NavigationManager.getInstance().navigateTo("evaluation", currentInterview);
     }

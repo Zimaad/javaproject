@@ -3,8 +3,8 @@ package com.smartinterview.controller;
 import com.smartinterview.model.InterviewResult;
 import com.smartinterview.model.PerformanceData;
 import com.smartinterview.navigation.NavigationManager;
-import com.smartinterview.service.MockAuthService;
-import com.smartinterview.service.MockDataService;
+import com.smartinterview.service.AuthService;
+import com.smartinterview.service.InterviewService;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
@@ -38,14 +38,14 @@ public class DashboardController {
     @FXML
     private TableColumn<InterviewResult, String> colDuration;
 
-    private final MockDataService dataService = MockDataService.getInstance();
+    private final InterviewService dataService = InterviewService.getInstance();
 
     @FXML
     public void initialize() {
         // Update greeting
-        String userName = "Zimaad ";
-        if (MockAuthService.getInstance().getCurrentUser() != null) {
-            String fullName = MockAuthService.getInstance().getCurrentUser().getFullName();
+        String userName = "there";
+        if (AuthService.getInstance().getCurrentUser() != null) {
+            String fullName = AuthService.getInstance().getCurrentUser().getFullName();
             userName = fullName.split(" ")[0];
         }
 
@@ -70,7 +70,7 @@ public class DashboardController {
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         series.setName("Score");
 
-        List<PerformanceData> data = dataService.getPerformanceHistory();
+        List<PerformanceData> data = dataService.getPerformanceHistory(6);
         for (PerformanceData pd : data) {
             series.getData().add(new XYChart.Data<>(pd.getLabel(), pd.getScore()));
         }
@@ -87,7 +87,10 @@ public class DashboardController {
         colDuration
                 .setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getTimeTakenMinutes() + " min"));
 
-        recentTable.getItems().addAll(dataService.getRecentInterviews());
+        recentTable.getItems().addAll(dataService.getRecent(5));
+        if (recentTable.getItems().isEmpty()) {
+            recentTable.setPlaceholder(new Label("No interviews yet — start one from the Interview tab."));
+        }
     }
 
     // Navigation handlers
@@ -128,7 +131,7 @@ public class DashboardController {
 
     @FXML
     private void onLogout() {
-        MockAuthService.getInstance().logout();
+        AuthService.getInstance().logout();
         NavigationManager.getInstance().navigateTo("landing");
     }
 }

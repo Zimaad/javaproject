@@ -1,0 +1,29 @@
+# Keys can be set as environment variables (GROQ_API_KEY, GEMINI_API_KEY, ...)
+# or here: copy this file to config.properties (git-ignored) and fill them in.
+#
+# Every provider that has a key is used, in this order, falling back to the
+# next if one fails: groq, openrouter, gemini, anthropic, openai.
+# ai.provider moves one to the front.
+# ai.provider=gemini
+
+# gpt-oss-120b via Groq or OpenRouter (use whichever host you have a key for)
+groq.api.key=
+# groq.model=openai/gpt-oss-120b
+openrouter.api.key=
+# openrouter.model=openai/gpt-oss-120b
+
+# Gemini Flash
+gemini.api.key=
+# gemini.model=gemini-3.8-flash
+
+anthropic.api.key=
+# anthropic.model=claude-sonnet-5-5
+openai.api.key=
+# openai.model=gpt-4o-mini
+
+# Any provider's endpoint can be overridden, e.g.
+# openai.base.url=http://localhost:11434/v1
+
+# Password for the seeded administrator account (admin@smartinterview.com).
+# Used only the first time the database is created.
+# admin.password=admin123

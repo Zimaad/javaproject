@@ -1,7 +1,8 @@
 package com.smartinterview.controller;
 
 import com.smartinterview.navigation.NavigationManager;
-import com.smartinterview.service.MockAuthService;
+import com.smartinterview.service.AuthException;
+import com.smartinterview.service.AuthService;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
@@ -79,8 +80,13 @@ public class RegisterController {
         }
 
         clearErrors();
-        MockAuthService.getInstance().register(
-            name, email, password, text(collegeField), degreeCombo.getValue(), yearCombo.getValue());
+        try {
+            AuthService.getInstance().register(
+                name, email, password, text(collegeField), degreeCombo.getValue(), yearCombo.getValue());
+        } catch (AuthException e) {
+            fail(e.getMessage(), emailField);
+            return;
+        }
         NavigationManager.getInstance().navigateTo("login");
     }
 

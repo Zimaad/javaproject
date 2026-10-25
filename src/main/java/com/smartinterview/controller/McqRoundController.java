@@ -3,7 +3,7 @@ package com.smartinterview.controller;
 import com.smartinterview.model.Interview;
 import com.smartinterview.model.Question;
 import com.smartinterview.navigation.NavigationManager;
-import com.smartinterview.service.MockInterviewService;
+import com.smartinterview.service.InterviewSession;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -86,14 +86,9 @@ public class McqRoundController implements NavigationManager.DataReceiver {
     }
 
     private void loadQuestions() {
-        // Load mock questions for this role
-        questions = MockInterviewService.getInstance().getMcqQuestions("INT001"); // using dummy id
-        
-        // Truncate to match user's selected question count
-        if (questions.size() > currentInterview.getQuestionCount()) {
-            questions = questions.subList(0, currentInterview.getQuestionCount());
-        }
-        
+        // The session already holds the questions picked when the interview started.
+        questions = InterviewSession.current().getMcqQuestions();
+
         buildNavigator();
         displayQuestion(0);
     }
@@ -224,7 +219,8 @@ public class McqRoundController implements NavigationManager.DataReceiver {
     
     private void submitRound() {
         if (timer != null) timer.stop();
-        
+        InterviewSession.current().setMcqAnswers(answers);
+
         // Find next round
         List<String> rounds = currentInterview.getRounds();
         int currentRoundIdx = rounds.indexOf("MCQ");

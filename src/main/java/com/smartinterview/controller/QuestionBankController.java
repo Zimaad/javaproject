@@ -1,7 +1,7 @@
 package com.smartinterview.controller;
 
 import com.smartinterview.model.Question;
-import com.smartinterview.service.MockDataService;
+import com.smartinterview.service.QuestionService;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -38,7 +38,7 @@ public class QuestionBankController {
 
     @FXML
     public void initialize() {
-        allQuestions = MockDataService.getInstance().getQuestionBank();
+        allQuestions = QuestionService.getInstance().getAll();
 
         buildFilters();
         applyFilters();
@@ -130,7 +130,10 @@ public class QuestionBankController {
         bookmark.getStyleClass().add("bookmark-btn");
         bookmark.setGraphic(new FontIcon("mdi2s-star-outline"));
         bookmark.setTooltip(new Tooltip("Save this question"));
-        bookmark.setOnAction(e -> toggleBookmark(bookmark));
+        bookmark.setOnAction(e -> toggleBookmark(bookmark, q));
+        if (q.isBookmarked()) {
+            showBookmarked(bookmark, true);
+        }
 
         HBox header = new HBox(8, typeBadge, categoryBadge, difficultyBadge, spacer, bookmark);
         header.setAlignment(Pos.CENTER_LEFT);
@@ -182,17 +185,23 @@ public class QuestionBankController {
         return card;
     }
 
-    private void toggleBookmark(Button bookmark) {
-        boolean on = bookmark.getStyleClass().contains("bookmark-btn-on");
+    private void toggleBookmark(Button bookmark, Question q) {
+        boolean turnOn = !bookmark.getStyleClass().contains("bookmark-btn-on");
+        q.setBookmarked(turnOn);
+        QuestionService.getInstance().setBookmarked(q.getId(), turnOn);
+        showBookmarked(bookmark, turnOn);
+    }
+
+    private void showBookmarked(Button bookmark, boolean on) {
         FontIcon icon = (FontIcon) bookmark.getGraphic();
+        bookmark.getStyleClass().remove("bookmark-btn-on");
         if (on) {
-            bookmark.getStyleClass().remove("bookmark-btn-on");
-            icon.setIconLiteral("mdi2s-star-outline");
-            bookmark.setTooltip(new Tooltip("Save this question"));
-        } else {
             bookmark.getStyleClass().add("bookmark-btn-on");
             icon.setIconLiteral("mdi2s-star");
             bookmark.setTooltip(new Tooltip("Saved — click to remove"));
+        } else {
+            icon.setIconLiteral("mdi2s-star-outline");
+            bookmark.setTooltip(new Tooltip("Save this question"));
         }
     }
 

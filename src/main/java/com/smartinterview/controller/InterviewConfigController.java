@@ -1,8 +1,13 @@
 package com.smartinterview.controller;
 
+import com.smartinterview.ai.AiClient;
 import com.smartinterview.model.Interview;
+import com.smartinterview.model.UserSettings;
+import com.smartinterview.service.InterviewService;
+import com.smartinterview.service.InterviewSession;
+import javafx.concurrent.Task;
 import com.smartinterview.navigation.NavigationManager;
-import com.smartinterview.service.MockAuthService;
+import com.smartinterview.service.AuthService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -26,6 +31,7 @@ public class InterviewConfigController implements NavigationManager.DataReceiver
     @FXML private Label summaryDuration;
     @FXML private Label summaryQuestions;
     @FXML private Label errorLabel;
+    @FXML private Button btnStart;
     @FXML private HBox errorBox;
 
     private ToggleGroup difficultyGroup;
@@ -63,11 +69,17 @@ public class InterviewConfigController implements NavigationManager.DataReceiver
             roleTitleLabel.setText(currentInterview.getRoleName());
             summaryRole.setText(currentInterview.getRoleName());
             
-            // Set defaults based on role if needed
-            if (currentInterview.getDifficulty().equals("Hard")) btnHard.setSelected(true);
-            else if (currentInterview.getDifficulty().equals("Easy")) btnEasy.setSelected(true);
+            // The user's saved preferences win over the role's own defaults.
+            UserSettings prefs = AuthService.getInstance().getSettings();
+            String difficulty = prefs.getDefaultDifficulty();
+            if (difficulty.equals("Hard")) btnHard.setSelected(true);
+            else if (difficulty.equals("Easy")) btnEasy.setSelected(true);
             else btnMedium.setSelected(true);
-            
+
+            if (prefs.getDefaultDuration().startsWith("15")) btn15m.setSelected(true);
+            else if (prefs.getDefaultDuration().startsWith("45")) btn45m.setSelected(true);
+            else btn30m.setSelected(true);
+
             onUpdateSummary();
         }
     }
@@ -127,21 +139,56 @@ public class InterviewConfigController implements NavigationManager.DataReceiver
             return;
         }
 
-        if (currentInterview != null) {
-            currentInterview.setRounds(rounds);
-            currentInterview.setDifficulty(((ToggleButton) difficultyGroup.getSelectedToggle()).getText());
-            currentInterview.setDurationMinutes(Integer.parseInt(((ToggleButton) durationGroup.getSelectedToggle()).getText().split(" ")[0]));
-            currentInterview.setQuestionCount(Integer.parseInt(((ToggleButton) questionsGroup.getSelectedToggle()).getText()));
+        if (currentInterview == null) {
+            return;
         }
+        currentInterview.setRounds(rounds);
+        currentInterview.setDifficulty(((ToggleButton) difficultyGroup.getSelectedToggle()).getText());
+        currentInterview.setDurationMinutes(Integer.parseInt(((ToggleButton) durationGroup.getSelectedToggle()).getText().split(" ")[0]));
+        currentInterview.setQuestionCount(Integer.parseInt(((ToggleButton) questionsGroup.getSelectedToggle()).getText()));
 
-        // Navigate to the first selected round
-        if (chkMcq.isSelected()) {
-            NavigationManager.getInstance().navigateTo("mcq-round", currentInterview);
-        } else if (chkCoding.isSelected()) {
-            NavigationManager.getInstance().navigateTo("coding-round", currentInterview);
-        } else {
-            NavigationManager.getInstance().navigateTo("hr-round", currentInterview);
-        }
+        // Picking questions can involve an AI call, so it runs off the UI thread.
+        btnStart.setDisable(true);
+        btnStart.setText(AiClient.getInstance().isConfigured() ? "Preparing your questions…" : "Starting…");
+
+        Task<InterviewSession> prepare = new Task<>() {
+            @Override
+            protected InterviewSession call() {
+                return InterviewService.getInstance().createSession(currentInterview);
+            }
+        };
+        prepare.setOnSucceeded(e -> {
+            InterviewSession session = prepare.getValue();
+            if (!hasQuestions(session)) {
+                failStart("No questions are available for the selected rounds.");
+                return;
+            }
+            InterviewSession.start(session);
+            String first = rounds.get(0);
+            NavigationManager.getInstance().navigateTo(
+                first.equals("MCQ") ? "mcq-round" : first.equals("Coding") ? "coding-round" : "hr-round",
+                currentInterview);
+        });
+        prepare.setOnFailed(e -> failStart("Could not prepare the interview: " + prepare.getException().getMessage()));
+
+        Thread worker = new Thread(prepare, "prepare-interview");
+        worker.setDaemon(true);
+        worker.start();
+    }
+
+    private boolean hasQuestions(InterviewSession s) {
+        List<String> rounds = currentInterview.getRounds();
+        return (!rounds.contains("MCQ") || !s.getMcqQuestions().isEmpty())
+            && (!rounds.contains("Coding") || !s.getCodingQuestions().isEmpty())
+            && (!rounds.contains("HR") || !s.getHrQuestions().isEmpty());
+    }
+
+    private void failStart(String message) {
+        btnStart.setDisable(false);
+        btnStart.setText("Start interview");
+        errorLabel.setText(message);
+        errorBox.setVisible(true);
+        errorBox.setManaged(true);
     }
 
     // Sidebar
@@ -153,7 +200,7 @@ public class InterviewConfigController implements NavigationManager.DataReceiver
     @FXML private void onNavProfile() { NavigationManager.getInstance().navigateTo("profile"); }
     @FXML private void onNavSettings() { NavigationManager.getInstance().navigateTo("settings"); }
     @FXML private void onLogout() {
-        MockAuthService.getInstance().logout();
+        AuthService.getInstance().logout();
         NavigationManager.getInstance().navigateTo("landing");
     }
 }

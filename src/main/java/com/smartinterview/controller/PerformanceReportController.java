@@ -1,8 +1,10 @@
 package com.smartinterview.controller;
 
+import com.smartinterview.App;
 import com.smartinterview.model.InterviewResult;
 import com.smartinterview.navigation.NavigationManager;
-import com.smartinterview.service.MockDataService;
+import com.smartinterview.service.ReportPdf;
+import com.smartinterview.service.InterviewService;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -13,6 +15,10 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import javafx.stage.FileChooser;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -29,14 +35,28 @@ public class PerformanceReportController implements NavigationManager.DataReceiv
     @FXML private VBox weaknessesContainer;
     @FXML private VBox recommendationsContainer;
 
+    private InterviewResult shown;
+
     @FXML
     public void initialize() {
         // Fall back to the most recent interview when opened from the nav
         // rather than from a just-finished round.
-        List<InterviewResult> recent = MockDataService.getInstance().getRecentInterviews();
-        if (!recent.isEmpty()) {
-            populateReport(recent.get(0));
+        InterviewResult latest = InterviewService.getInstance().getLatest();
+        if (latest != null) {
+            populateReport(latest);
+        } else {
+            showEmpty();
         }
+    }
+
+    private void showEmpty() {
+        reportSubtitle.setText("No interviews yet — finish one to see your report here.");
+        overallScoreLabel.setText("—");
+        verdictLabel.setText("No data");
+        roundsContainer.getChildren().clear();
+        fillFeedback(strengthsContainer, null, "", "");
+        fillFeedback(weaknessesContainer, null, "", "");
+        fillFeedback(recommendationsContainer, null, "", "");
     }
 
     @Override
@@ -47,6 +67,7 @@ public class PerformanceReportController implements NavigationManager.DataReceiv
     }
 
     private void populateReport(InterviewResult result) {
+        shown = result;
         int score = (int) result.getOverallScore();
 
         reportSubtitle.setText(result.getRoleName() + " · completed " + result.getDate());
@@ -144,9 +165,25 @@ public class PerformanceReportController implements NavigationManager.DataReceiv
 
     @FXML
     private void onExport() {
-        // Export is out of scope for the mock build; the button stays
-        // visible but says so rather than failing silently.
-        reportSubtitle.setText(reportSubtitle.getText() + "  ·  export not available in this demo build");
+        if (shown == null) {
+            return;
+        }
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Export report");
+        chooser.setInitialFileName("Interview-Report-" + shown.getRoleName().replace(' ', '-') + "-"
+            + shown.getDate().replace(", ", "-").replace(' ', '-') + ".pdf");
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF document", "*.pdf"));
+        File file = chooser.showSaveDialog(App.getPrimaryStage());
+        if (file == null) {
+            return;
+        }
+        try {
+            ReportPdf.write(shown, file.toPath());
+            reportSubtitle.setText(shown.getRoleName() + " · completed " + shown.getDate()
+                + "  ·  saved " + file.getName());
+        } catch (IOException e) {
+            reportSubtitle.setText("Export failed: " + e.getMessage());
+        }
     }
 
     @FXML

@@ -1,7 +1,14 @@
 package com.smartinterview.controller;
 
+import com.smartinterview.ai.AiClient;
 import com.smartinterview.model.Question;
-import com.smartinterview.service.MockDataService;
+import com.smartinterview.ui.Dialogs;
+import com.smartinterview.ui.QuestionEditorDialog;
+import javafx.animation.PauseTransition;
+import javafx.concurrent.Task;
+import javafx.util.Duration;
+import java.sql.SQLException;
+import com.smartinterview.service.QuestionService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -43,7 +50,7 @@ public class AdminQuestionController {
 
     @FXML
     public void initialize() {
-        allQuestions = MockDataService.getInstance().getQuestionBank();
+        allQuestions = QuestionService.getInstance().getAll();
 
         setupTable();
         buildFilters();
@@ -92,17 +99,13 @@ public class AdminQuestionController {
                 btnEdit.setGraphic(new FontIcon("mdi2p-pencil-outline"));
                 btnEdit.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
                 btnEdit.setTooltip(new Tooltip("Edit question"));
-                btnEdit.setOnAction(e -> { /* editing is not wired up in this build */ });
+                btnEdit.setOnAction(e -> onEditQuestion(getTableView().getItems().get(getIndex())));
 
                 btnDelete.getStyleClass().addAll("btn-icon", "btn-danger-quiet");
                 btnDelete.setGraphic(new FontIcon("mdi2d-delete-outline"));
                 btnDelete.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
                 btnDelete.setTooltip(new Tooltip("Delete question"));
-                btnDelete.setOnAction(e -> {
-                    Question victim = getTableView().getItems().get(getIndex());
-                    allQuestions.remove(victim);
-                    applyFilters();
-                });
+                btnDelete.setOnAction(e -> onDeleteQuestion(getTableView().getItems().get(getIndex())));
             }
 
             @Override
@@ -147,20 +150,92 @@ public class AdminQuestionController {
 
     @FXML
     private void onAddQuestion() {
-        // Stated in the table's own area rather than in a modal Alert, which
-        // would open an unstyled window.
-        questionTable.setPlaceholder(buildNotice());
+        QuestionEditorDialog.show(null).ifPresent(this::persist);
     }
 
-    private javafx.scene.Node buildNotice() {
+    private void onEditQuestion(Question q) {
+        QuestionEditorDialog.show(q).ifPresent(this::persist);
+    }
+
+    private void persist(Question q) {
+        try {
+            QuestionService.getInstance().save(q);
+            reload();
+        } catch (SQLException e) {
+            showMessage("Could not save the question", e.getMessage());
+        }
+    }
+
+    private void onDeleteQuestion(Question q) {
+        if (!Dialogs.confirm("Delete question", "Delete this question from the bank? It cannot be undone.", "Delete")) {
+            return;
+        }
+        try {
+            QuestionService.getInstance().delete(q.getId());
+            reload();
+        } catch (SQLException e) {
+            showMessage("Could not delete the question", e.getMessage());
+        }
+    }
+
+    @FXML
+    private void onGenerateQuestions() {
+        if (!AiClient.getInstance().isConfigured()) {
+            showMessage("AI is not configured", "Add an API key to config.properties and restart the app.");
+            return;
+        }
+        Dialogs.generateQuestions().ifPresent(req -> {
+            showMessage("Generating…", "Asking the AI for " + req.count() + " " + req.type().toUpperCase(Locale.ROOT)
+                + " questions about " + req.topic() + ".");
+            Task<List<Question>> task = new Task<>() {
+                @Override
+                protected List<Question> call() throws Exception {
+                    return QuestionService.getInstance().generate(
+                        req.type(), "software", List.of(req.topic()), req.difficulty(), req.count());
+                }
+            };
+            task.setOnSucceeded(e -> {
+                reload();
+                showMessage("Added " + task.getValue().size() + " questions", "They are now in the bank.");
+            });
+            task.setOnFailed(e -> {
+                reload();
+                showMessage("Generation failed", task.getException().getMessage());
+            });
+            Thread worker = new Thread(task, "generate-questions");
+            worker.setDaemon(true);
+            worker.start();
+        });
+    }
+
+    /** Re-reads the bank after a change so the table and filters reflect it. */
+    private void reload() {
+        allQuestions = QuestionService.getInstance().getAll();
+        buildFilters();
+        applyFilters();
+    }
+
+    /** Reported in the table's own area; a bare modal Alert would open an unstyled window. */
+    private void showMessage(String title, String body) {
+        questionTable.setPlaceholder(buildNotice(title, body));
+        if (!questionTable.getItems().isEmpty()) {
+            questionTable.getItems().clear();
+            PauseTransition restore = new PauseTransition(Duration.seconds(4));
+            restore.setOnFinished(e -> applyFilters());
+            restore.play();
+        }
+    }
+
+    private javafx.scene.Node buildNotice(String heading, String text) {
         FontIcon icon = new FontIcon("mdi2i-information-outline");
         icon.getStyleClass().addAll("icon-2xl", "icon-subtle");
 
-        Label title = new Label("Adding questions is not available yet");
+        Label title = new Label(heading);
         title.getStyleClass().add("empty-title");
 
-        Label body = new Label("The question editor is planned for a later build.");
+        Label body = new Label(text);
         body.getStyleClass().add("empty-text");
+        body.setWrapText(true);
 
         javafx.scene.layout.VBox box = new javafx.scene.layout.VBox(12, icon, title, body);
         box.getStyleClass().add("empty-state");

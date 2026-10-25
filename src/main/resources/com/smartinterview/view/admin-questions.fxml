@@ -36,6 +36,9 @@
                 <Region HBox.hgrow="ALWAYS"/>
                 <ComboBox fx:id="categoryCombo" promptText="All categories" prefWidth="154"/>
                 <ComboBox fx:id="typeCombo" promptText="All types" prefWidth="134"/>
+                <Button styleClass="btn-secondary" onAction="#onGenerateQuestions" text="Generate with AI">
+                    <graphic><FontIcon iconLiteral="mdi2r-robot-outline" styleClass="icon-sm"/></graphic>
+                </Button>
                 <Button styleClass="btn-primary" onAction="#onAddQuestion" text="Add question">
                     <graphic><FontIcon iconLiteral="mdi2p-plus" styleClass="icon-sm"/></graphic>
                 </Button>

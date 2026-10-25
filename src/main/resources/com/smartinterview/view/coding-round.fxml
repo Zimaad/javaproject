@@ -71,7 +71,7 @@
                     <Label fx:id="fileNameLabel" text="Solution.java" styleClass="editor-filename"/>
                     <Region HBox.hgrow="ALWAYS"/>
                     <ComboBox fx:id="languageCombo" promptText="Java" prefWidth="124"/>
-                    <Button text="Run" styleClass="btn-secondary, btn-small" onAction="#onRunCode">
+                    <Button fx:id="btnRun" text="Run" styleClass="btn-secondary, btn-small" onAction="#onRunCode">
                         <graphic><FontIcon iconLiteral="mdi2p-play" styleClass="icon-xs"/></graphic>
                     </Button>
                     <Button fx:id="btnSubmit" text="Submit" styleClass="btn-primary, btn-small" onAction="#onSubmitSolution">

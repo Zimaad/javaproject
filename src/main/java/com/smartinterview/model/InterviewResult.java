@@ -16,6 +16,8 @@ public class InterviewResult {
     private List<String> recommendations;
     private String date;
     private int timeTakenMinutes;
+    private int questionsAnswered;
+    private List<QuestionReview> reviews = List.of();
 
     public InterviewResult() {}
 
@@ -46,4 +48,10 @@ public class InterviewResult {
 
     public int getTimeTakenMinutes() { return timeTakenMinutes; }
     public void setTimeTakenMinutes(int mins) { this.timeTakenMinutes = mins; }
+
+    public List<QuestionReview> getReviews() { return reviews; }
+    public void setReviews(List<QuestionReview> r) { this.reviews = r; }
+
+    public int getQuestionsAnswered() { return questionsAnswered; }
+    public void setQuestionsAnswered(int n) { this.questionsAnswered = n; }
 }

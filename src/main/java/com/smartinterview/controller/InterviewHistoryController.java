@@ -2,7 +2,7 @@ package com.smartinterview.controller;
 
 import com.smartinterview.model.InterviewResult;
 import com.smartinterview.navigation.NavigationManager;
-import com.smartinterview.service.MockDataService;
+import com.smartinterview.service.InterviewService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -40,7 +40,7 @@ public class InterviewHistoryController {
 
     @FXML
     public void initialize() {
-        allResults = MockDataService.getInstance().getInterviewHistory();
+        allResults = InterviewService.getInstance().getHistory();
 
         setupTable();
         buildFilters();

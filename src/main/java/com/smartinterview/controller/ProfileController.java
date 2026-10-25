@@ -1,7 +1,8 @@
 package com.smartinterview.controller;
 
 import com.smartinterview.model.User;
-import com.smartinterview.service.MockAuthService;
+import com.smartinterview.service.AuthException;
+import com.smartinterview.service.AuthService;
 import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -46,7 +47,7 @@ public class ProfileController {
 
     /** Fills every field and the summary rail from the signed-in user. */
     private void populateFromUser() {
-        User user = MockAuthService.getInstance().getCurrentUser();
+        User user = AuthService.getInstance().getCurrentUser();
         if (user == null) {
             return;
         }
@@ -68,7 +69,7 @@ public class ProfileController {
 
     @FXML
     private void onSave() {
-        User user = MockAuthService.getInstance().getCurrentUser();
+        User user = AuthService.getInstance().getCurrentUser();
         if (user == null) {
             return;
         }
@@ -84,10 +85,13 @@ public class ProfileController {
         }
         nameField.getStyleClass().remove("field-error");
 
-        user.setFullName(name);
-        user.setCollege(collegeField.getText());
-        user.setDegree(degreeCombo.getValue());
-        user.setYear(yearCombo.getValue());
+        try {
+            AuthService.getInstance().updateProfile(
+                name, collegeField.getText(), degreeCombo.getValue(), yearCombo.getValue());
+        } catch (AuthException e) {
+            showStatus(e.getMessage(), false);
+            return;
+        }
 
         populateFromUser();
         showStatus("Profile updated.", true);

@@ -3,16 +3,16 @@ package com.smartinterview.controller;
 import com.smartinterview.model.Interview;
 import com.smartinterview.model.InterviewResult;
 import com.smartinterview.navigation.NavigationManager;
-import com.smartinterview.service.MockDataService;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+import com.smartinterview.service.EvaluationService;
+import com.smartinterview.service.InterviewSession;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.util.Duration;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 public class EvaluationController implements NavigationManager.DataReceiver {
@@ -34,11 +34,11 @@ public class EvaluationController implements NavigationManager.DataReceiver {
     public void receiveData(Object data) {
         if (data instanceof Interview interview) {
             currentInterview = interview;
-            startSimulation();
+            startEvaluation();
         }
     }
 
-    private void startSimulation() {
+    private void startEvaluation() {
         reset(step1, icon1, "1");
         reset(step2, icon2, "2");
         reset(step3, icon3, "3");
@@ -49,14 +49,35 @@ public class EvaluationController implements NavigationManager.DataReceiver {
         progressIndicator.setVisible(true);
         progressIndicator.setManaged(true);
 
-        Timeline timeline = new Timeline(
-            new KeyFrame(Duration.ZERO,          e -> markActive(step1, icon1)),
-            new KeyFrame(Duration.seconds(1.0),  e -> { markDone(step1, icon1); markActive(step2, icon2); }),
-            new KeyFrame(Duration.seconds(2.5),  e -> { markDone(step2, icon2); markActive(step3, icon3); }),
-            new KeyFrame(Duration.seconds(3.5),  e -> { markDone(step3, icon3); markActive(step4, icon4); }),
-            new KeyFrame(Duration.seconds(4.5),  e -> { markDone(step4, icon4); showReportButton(); })
-        );
-        timeline.play();
+        InterviewSession session = InterviewSession.current();
+        StackPane[] icons = {icon1, icon2, icon3, icon4};
+        HBox[] steps = {step1, step2, step3, step4};
+
+        Task<InterviewResult> grading = new Task<>() {
+            @Override
+            protected InterviewResult call() {
+                // Each stage is reported from this worker thread as it genuinely begins.
+                return EvaluationService.getInstance().evaluate(session, stage -> Platform.runLater(() -> {
+                    if (stage > 1) markDone(steps[stage - 2], icons[stage - 2]);
+                    markActive(steps[stage - 1], icons[stage - 1]);
+                }));
+            }
+        };
+        grading.setOnSucceeded(e -> {
+            markDone(step4, icon4);
+            finalResult = grading.getValue();
+            InterviewSession.clear();
+            showReportButton();
+        });
+        grading.setOnFailed(e -> {
+            progressIndicator.setVisible(false);
+            progressIndicator.setManaged(false);
+            stepLabel(step4).setText("Evaluation failed: " + grading.getException().getMessage());
+        });
+
+        Thread worker = new Thread(grading, "evaluate-interview");
+        worker.setDaemon(true);
+        worker.start();
     }
 
     /** Pending: the step shows its number, greyed out. */
@@ -99,9 +120,6 @@ public class EvaluationController implements NavigationManager.DataReceiver {
         progressIndicator.setManaged(false);
         btnViewReport.setVisible(true);
         btnViewReport.setManaged(true);
-
-        finalResult = MockDataService.getInstance()
-            .generateMockEvaluation(currentInterview.getRoleName());
     }
 
     @FXML

@@ -1,9 +1,12 @@
 package com.smartinterview.controller;
 
+import com.smartinterview.ai.AiClient;
 import com.smartinterview.model.Interview;
 import com.smartinterview.model.Question;
 import com.smartinterview.navigation.NavigationManager;
-import com.smartinterview.service.MockInterviewService;
+import com.smartinterview.service.EvaluationService;
+import com.smartinterview.service.InterviewSession;
+import javafx.concurrent.Task;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -31,6 +34,7 @@ public class CodingRoundController implements NavigationManager.DataReceiver {
     @FXML private Button btnPrev;
     @FXML private Button btnNext;
     @FXML private Button btnSubmit;
+    @FXML private Button btnRun;
     
     @FXML private ComboBox<String> languageCombo;
     @FXML private TextArea codeArea;
@@ -98,7 +102,7 @@ public class CodingRoundController implements NavigationManager.DataReceiver {
     }
 
     private void loadQuestions() {
-        questions = MockInterviewService.getInstance().getCodingQuestions("INT001");
+        questions = InterviewSession.current().getCodingQuestions();
         displayQuestion(0);
     }
     
@@ -157,7 +161,47 @@ public class CodingRoundController implements NavigationManager.DataReceiver {
     private void onRunCode() {
         consolePanel.setVisible(true);
         consolePanel.setManaged(true);
-        consoleOutput.setText("Compiling...\nRunning test cases...\n\nTest Case 1: Passed (0.012s)\nTest Case 2: Passed (0.008s)\nTest Case 3: Passed (0.015s)\n\nAll public test cases passed successfully!");
+
+        String code = codeArea.getText() == null ? "" : codeArea.getText();
+        if (code.isBlank()) {
+            consoleOutput.setText("Write some code first, then press Run.");
+            return;
+        }
+        if (!AiClient.getInstance().isConfigured()) {
+            consoleOutput.setText("Run needs an AI API key, because code is reviewed by the AI rather than executed.\n"
+                + "Add a key to config.properties and restart the app.");
+            return;
+        }
+
+        consoleOutput.setText("Reviewing your solution against example and edge cases…");
+        btnRun.setDisable(true);
+        Question q = questions.get(currentIndex);
+        String language = languageCombo.getValue();
+
+        Task<EvaluationService.CodeReview> review = new Task<>() {
+            @Override
+            protected EvaluationService.CodeReview call() throws Exception {
+                return EvaluationService.getInstance().reviewCode(q, code, language);
+            }
+        };
+        review.setOnSucceeded(e -> {
+            EvaluationService.CodeReview r = review.getValue();
+            StringBuilder out = new StringBuilder("AI review (the code is traced, not executed)\n\n");
+            r.cases().forEach(line -> out.append(line).append('\n'));
+            out.append('\n').append(r.passed()).append('/').append(r.total()).append(" cases passed");
+            if (!r.summary().isBlank()) {
+                out.append("\n\n").append(r.summary());
+            }
+            consoleOutput.setText(out.toString());
+            btnRun.setDisable(false);
+        });
+        review.setOnFailed(e -> {
+            consoleOutput.setText("Review failed: " + review.getException().getMessage());
+            btnRun.setDisable(false);
+        });
+        Thread worker = new Thread(review, "code-review");
+        worker.setDaemon(true);
+        worker.start();
     }
     
     @FXML
@@ -187,7 +231,9 @@ public class CodingRoundController implements NavigationManager.DataReceiver {
     
     private void submitRound() {
         if (timer != null) timer.stop();
-        
+        InterviewSession.current().setCodeAnswers(codeAnswers);
+        InterviewSession.current().setCodeLanguage(languageCombo.getValue());
+
         List<String> rounds = currentInterview.getRounds();
         int currentRoundIdx = rounds.indexOf("Coding");
         

@@ -1,5 +1,10 @@
 package com.smartinterview.controller;
 
+import com.smartinterview.model.UserSettings;
+import com.smartinterview.navigation.NavigationManager;
+import com.smartinterview.service.AuthException;
+import com.smartinterview.service.AuthService;
+import com.smartinterview.ui.Dialogs;
 import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -21,10 +26,13 @@ public class SettingsController {
     @FXML
     public void initialize() {
         difficultyCombo.getItems().addAll("Easy", "Medium", "Hard");
-        difficultyCombo.setValue("Medium");
-
         durationCombo.getItems().addAll("15 minutes", "30 minutes", "45 minutes");
-        durationCombo.setValue("30 minutes");
+
+        UserSettings saved = AuthService.getInstance().getSettings();
+        difficultyCombo.setValue(saved.getDefaultDifficulty());
+        durationCombo.setValue(saved.getDefaultDuration());
+        emailToggle.setSelected(saved.isEmailNotifications());
+        reminderToggle.setSelected(saved.isPracticeReminders());
 
         // The toggle's label states what is true now, not what clicking does,
         // so its meaning does not rest on the selected colour alone.
@@ -40,17 +48,49 @@ public class SettingsController {
 
     @FXML
     private void onSave() {
-        showStatus("Preferences saved.");
+        UserSettings s = new UserSettings();
+        s.setDefaultDifficulty(difficultyCombo.getValue());
+        s.setDefaultDuration(durationCombo.getValue());
+        s.setEmailNotifications(emailToggle.isSelected());
+        s.setPracticeReminders(reminderToggle.isSelected());
+        try {
+            AuthService.getInstance().saveSettings(s);
+            showStatus("Preferences saved.");
+        } catch (AuthException e) {
+            showStatus(e.getMessage());
+        }
     }
 
     @FXML
     private void onChangePassword() {
-        showStatus("Password changes are not available in this demo build.");
+        Dialogs.changePassword().ifPresent(pair -> {
+            try {
+                AuthService.getInstance().changePassword(pair[0], pair[1]);
+                showStatus("Password changed.");
+            } catch (AuthException e) {
+                showStatus(e.getMessage());
+            }
+        });
     }
 
     @FXML
     private void onDeleteAccount() {
-        showStatus("Account deletion is disabled in this demo build.");
+        if (AuthService.getInstance().isAdmin()) {
+            showStatus("The administrator account cannot be deleted.");
+            return;
+        }
+        boolean confirmed = Dialogs.confirm("Delete account",
+            "This permanently deletes your account, interview history and saved questions. It cannot be undone.",
+            "Delete account");
+        if (!confirmed) {
+            return;
+        }
+        try {
+            AuthService.getInstance().deleteCurrentAccount();
+            NavigationManager.getInstance().navigateTo("landing");
+        } catch (AuthException e) {
+            showStatus(e.getMessage());
+        }
     }
 
     /**
